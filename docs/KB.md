@@ -1,6 +1,31 @@
 # KB thiết kế triển khai và checklist Nhóm 07
 
-Cập nhật 27/10/2026, theo trao đổi trực tiếp với người dùng. Đây là **KB duy nhất để theo dõi quyết định, đề xuất, chênh lệch ba bên, thứ tự triển khai và checklist**. Các tài liệu khác chứa giải thích, hướng dẫn thao tác hoặc bằng chứng; trạng thái tiến độ mới được cập nhật tại đây. Phân biệt quyết định đã thống nhất với chức năng đã triển khai; không dùng tài liệu này làm bằng chứng test pass. **Bản local R5 đã sửa source/diagram cho S2–S4, build và test tự động pass; S5 runtime chưa xác nhận. DOCX chưa sửa.**
+Cập nhật 28/10/2026, theo trao đổi trực tiếp với người dùng. Đây là **KB duy nhất để theo dõi quyết định, đề xuất, chênh lệch ba bên, thứ tự triển khai và checklist**. Các tài liệu khác chứa giải thích, hướng dẫn thao tác hoặc bằng chứng; trạng thái tiến độ mới được cập nhật tại đây. Phân biệt quyết định đã thống nhất với chức năng đã triển khai; không dùng tài liệu này làm bằng chứng test pass. **S2–S4 đã có R5; S5 hoãn theo người dùng. R6 thêm S6 MQTT/contract/mock, build/host/PC-broker smoke pass, chưa nghiệm thu runtime Wokwi. DOCX chưa sửa.**
+
+<a id="progress"></a>
+
+[Mở bản đồ thư mục và điểm bắt đầu](project-map.md) · [Hướng dẫn hiện tại](s7-s8-guide.md)
+
+## Tiến độ S0–S9 — bắt đầu tại đây
+
+**Đã triển khai phần mềm tới S8 theo chế độ mock; model thật hoãn theo người dùng28/10/2026.** S5 vẫnHOÃN. S6 có mạng/contract/fusion; S7 có adapter/replay/plugin để thay model sau; S8 có regression, capture và công cụ quản lý bảng nghiệm thu. Build/host/unit/PC-broker smokePASS. **Chưa hoàn tất nghiệm thu S8:** còn lượtWokwi/ảnh, model/metrics thật và các phép đo mạng/latency trênMCU. Không lấy kết quảmock làm kết quảmodel.
+
+| Bước | Nội dung | Trạng thái hiện tại | Checklist chi tiết |
+|---|---|---|---|
+| S0 | Ôn GPIO, ADC, PWM và flow chương trình | Đã đi một vòng giải thích; ôn tiếp khi cần, phần tự diễn giải chưa xác nhận | [H01–H06](#s0) |
+| S1 | Chốt board, LDR, hai relay, servo, DHT/ACK | Đã chốt thiết kế local | [P01–P06](#s1) |
+| S2 | Giữ nguy hiểm nhiệt khi DHT lỗi | Đã code; build/host tests pass, runtime lỗi DHT còn trong S5 | [I01–I07](#s2-s4) |
+| S3 | LDR demo lửa | Đã code; người dùng đã thấy sáng tăng→ADC<500→còi | [I01–I07](#s2-s4) |
+| S4 | Servo cửa + hai relay | Đã code; đã thấy LED tải sáng và xác nhận đóng cửa; toàn bộ state chờ S5 | [I01–I07](#s2-s4) |
+| S5 | Kiểm chứng local trong Wokwi | **HOÃN theo người dùng**, chưa đóng L01–L10 | [L01–L10](#s5) |
+| S6 | MQTT, contract, TTL, mock | Có code/test; log người dùng chứng minh chiều ESP→PC; nhậnAI/reconnect/latency còn chờ | [N01–N08](#s6) |
+| S7 | Adapter/publisher AI + model | **Khung đã có R7; model/dataset/train/metrics HOÃN** | [M01–M10](#s7) |
+| **S8** | **Công cụ kiểm thử và nghiệm thu** | **Tooling đã có; host240PASS/20DEFERRED; bảng260lượt thực vẫnNOT_RUN** | **[E01–E08 và13TC](#s8)** |
+| S9 | Đồng bộ báo cáo và đóng gói | Chưa sửa DOCX | [R01–R09](#s9) |
+
+**Việc tiếp theo:** Stop/Start bảnR7, dùng [hướng dẫn S7–S8](s7-s8-guide.md) để thu log và thử replay; `tools/verify_project.py` chạy các kiểm tra phần mềm bằng một lệnh. Các phần model thật giữ hoãn để thay sau, không cản việc chuẩn bị/test tích hợp bằngmock.
+
+Mốc local đã commit: `a730740` (layout + gas10ppm + volume0.25). Các thay đổi S6–S8/R7 nằm trong working tree, chưa tự commit. [Hướng dẫn hiện tại S7–S8](s7-s8-guide.md); [contract S6](reference/s6-mqtt-contract.md).
 
 ## Cách đọc và điểm bắt đầu
 
@@ -11,15 +36,15 @@ Cập nhật 27/10/2026, theo trao đổi trực tiếp với người dùng. Đ
 - P0: cần trước khi chốt nhánh local hoặc trước tích hợp phụ thuộc; P1: bắt buộc cho nghiệm thu cuối; P2: mở rộng tùy chọn.
 - Bằng chứng có ở bản nút giả lửa không tự chứng minh bản LDR/servo sau thay đổi. Mỗi lần sửa ghi các test cần chạy lại.
 
-**Điểm tiếp theo:** tiếp tục S5: đã nhận log boot R5 của người dùng (MQ3628→FIRE, LDR2045 nền, DHT28/45 đọc tốt); hạ MQ về nền rồi test RECOVERY/ACK và quan sát tải/cửa. S1 đã chốt; S2–S4 đã có source, build và test tự động. Còn khảo sát ADC LDR, góc servo thực, relay/còi và latency trong simulator. MQTT/AI vẫn chưa triển khai.
+**Điểm tiếp theo:** kiểm tra tích hợp R7 bằng mock và ghi log theo [S7–S8](s7-s8-guide.md). S5/model thật hoãn; S9 chưa bắt đầu.
 
-| Theo dõi nhanh | Trạng thái 27/10/2026 |
+| Theo dõi nhanh | Trạng thái 28/10/2026 |
 |---|---|
-| Firmware local | LOCAL R5 có LDR/servo/DHT hold; build và10nhóm core tests + wiring pass; S5 runtime còn chờ |
+| Firmware hiện tại | R7 có local + MQTT/fusion + identity; GPIO/ngưỡng/FSM/tải không đổi trong bước S7–S8; S5 hoãn |
 | Lỗi quan trọng | A16 đã có regression fail trước sửa/pass sau sửa; giữ nhiệt cao/rate qua DHT lỗi hoặc stale; timeout vẫn dừng tải |
 | Thiết kế mới được đồng ý | LDR demo lửa; hai relay bơm/van + servo cửa; DHT3 s |
-| Lựa chọn kỹ thuật | Đã chọn LDR32/100ms/ADC500-750 và servo33/0-90°/50Hz kênh8; cần kiểm chứng runtime. AI/MQTT chưa chốt. |
-| AI/MQTT/dashboard | Chưa có triển khai; dashboard tùy chọn |
+| Lựa chọn kỹ thuật | Đã chọn LDR32/100ms/ADC500-750 và servo33/0-90°/50Hz kênh8; cần kiểm chứng runtime. MQTT/schema đã chọnR6; task modelAI thật chưa chốt. |
+| AI/MQTT/dashboard | MQTT có log ESP→PC; adapter/replay/plugin R7 sẵn; chưa có model thật/dashboard |
 | Báo cáo | Đã review, chưa sửa DOCX; còn mâu thuẫn và phần mẫu chưa điền |
 | Nghiệm thu đầy đủ | Chưa thực hiện đủ 13×20 lượt; không tính host tests thay integration |
 
@@ -66,7 +91,7 @@ ESP32 → relay bơm
       → servo mô phỏng cửa thoát hiểm
 ```
 
-Đã chốt hành vi trong S1 ngày27/10/2026: mở khi vào FIRE_SUPPRESSION, giữ mở qua RECOVERY (kể cả timeout); chỉ đóng khi mọi đầu vào đủ điều kiện an toàn3s và có cạnh ACK mới hợp lệ. Boot chưa phát hiện nguy hiểm, NORMAL và WARNING trước FIRE thì đóng. Nhấn ACK khi còn nguy hiểm không đóng cửa. R5 dùng GPIO33,0°/90°,50Hz16bit,500us/1500us; kiểm tra core2.0.17 xác nhận kênh8/group1 không chung timer với còi kênh0/group0. Góc chuyển động thực chưa quan sát trên Wokwi.
+Đã chốt hành vi trong S1 ngày27/10/2026: mở khi vào FIRE_SUPPRESSION, giữ mở qua RECOVERY (kể cả timeout); chỉ đóng khi mọi đầu vào đủ điều kiện an toàn3s và có cạnh ACK mới hợp lệ. Boot chưa phát hiện nguy hiểm, NORMAL và WARNING trước FIRE thì đóng. Nhấn ACK khi còn nguy hiểm không đóng cửa. R5 dùng GPIO33,0°/90°,50Hz16bit,500us/1500us; kiểm tra core2.0.17 xác nhận kênh8/group1 không chung timer với còi kênh0/group0. Người dùng đã xác nhận đóng cửa trên Wokwi ngày28/10; chuỗi góc mở/đóng đầy đủ và phép đo thực còn theo S5.
 
 Kiểm tra GPIO và kênh PWM với còi LEDC hiện tại; không chép GPIO19 của servo IoT cũ vì đang dùng cho ACK. Thêm test riêng servo và test đồng thời bơm/van/còi/cửa. Đây là cửa mô hình học thuật, chưa phải thiết kế cơ cấu thoát hiểm thực tế.
 
@@ -137,8 +162,8 @@ Nguồn T = hướng dẫn thầy, nhất là Phần F. B = báo cáo AutoRecove
 | A24 | B gộp cảm biến lửa với đợi khói/nhiệt tới vị trí | Sửa mô tả cơ chế | Nêu cảm biến lửa quang học phụ thuộc tầm nhìn/phổ/nhiễu, không cần khói bay tới; LDR demo không chứng minh IR | Chưa sửa B |
 | A25 | B schema timestamp/detections/alarm_level; kế hoạch C v/nhan/do_tin_cay/ts_ms | Đề xuất hợp đồng chung và adapter nếu dùng detector | Chốt topic, label, type, confidence, timestamp/unit, TTL, seq/session, kích thước; alarm_level không vượt quyền local/FSM | Chưa triển khai |
 | A26 | T callback mặc định trường thiếu, refresh trước validation | Kiểm tra ngữ nghĩa ngoài JSON syntax | Payload thiếu/sai kiểu/nhãn lạ/confidence không hữu hạn/ngoài[0,1]/quá dài phải xử lý rõ; gói lỗi không gia hạn AI hợp lệ | Chờ S6 |
-| A27 | B QoS1 bảo đảm không mất; PubSubClient publishQoS0 | Theo khả năng thư viện/chiều truyền thật | Chốt thư viện/version; phân publish và subscribe, QoS và retained; xử lý duplicate/stale; không tuyên bố bảo đảm tuyệt đối | Chưa chốt/chưa sửa B |
-| A28 | T/B AI chỉ nâng, TTL/reconnect; C chưa có mạng | Theo yêu cầu chức năng thầy | Hợp nhất max(local,AI hợp lệ); TTL/mấtAI/UI, subscribe sau reconnect, hai chiều; mock không thay model thật | Chờ S6/S7 |
+| A27 | B QoS1 bảo đảm không mất; PubSubClient publishQoS0 | Theo khả năng thư viện/chiều truyền thật | Chốt thư viện/version; phân publish và subscribe, QoS và retained; xử lý duplicate/stale; không tuyên bố bảo đảm tuyệt đối | R6 chốt ESP-MQTT/ESP publish0, mockpublish1/sub1; B chưa sửa |
+| A28 | T/B AI chỉ nâng, TTL/reconnect; C chưa có mạng | Theo yêu cầu chức năng thầy | Hợp nhất max(local,AI hợp lệ); TTL/mấtAI/UI, subscribe sau reconnect, hai chiều; mock không thay model thật | R6 có hợp nhất/TTL/mock; chờ MCU runtime/S7model |
 | A29 | B Arduino IDE, đã dùng các thư viện mạng | Theo môi trường thật | Ghi VSCode/PlatformIO + Arduino framework và version thực; mạng/AI ghi dự kiến nếu chưa làm; không cần đổi C++ thành sketch.ino | Chưa sửa B |
 | A30 | B Wokwi hoàn toàn open source, GPU Colab miễn phí, AI không chạy được trên ESP32 | Thu hẹp khẳng định theo nguồn/phiên bản | Không gọi toàn bộ Wokwi open source; GPU phụ thuộc khả dụng; khả năng AI tùy model/board; PC là lựa chọn kiến trúc hiện tại | Chưa sửa B |
 | A31 | B optocoupler luôn cách ly hoàn toàn; mô phỏng dễ bị hiểu là mạch thật | Theo schematic/module và cách đấu thực tế | Ghi sim-only; hardware cần nguồn, chuyển mức, warmup/hiệu chuẩn; không tự kết luận có cách ly chỉ vì có optocoupler | Chưa đồng bộ B; hardware ngoài phạm vi hiện tại |
@@ -156,15 +181,17 @@ Nguồn T = hướng dẫn thầy, nhất là Phần F. B = báo cáo AutoRecove
 | S0 | Ôn căn bản và theo một tín hiệu xuyên hệ thống | Giải thích trên mạch, main/sensors/safety/outputs/telemetry | Người dùng tự mô tả đầu vào→luật→FSM→tải→log; không cần thuộc C++ | Chưa hoàn tất vòng học |
 | S1 | Chốt thiết kế local có LDR/servo | KB D01–D08, bảng GPIO, bảng đầu ra theo state | Có pinout không xung đột, quy tắc LDR và servo boot/mở/đóng/lỗi/ACK | Chốt hành vi và chọn thông số R5; ngưỡng/góc còn xác nhận ở S5 |
 | S2 | Sửa mất DHT sau nguy hiểm | safety.h/.cpp, sensors nếu cần, test_safety, log reason, test guide | Regression60C→lỗi pass; timeout/ACK/nhánh MQ-LDR không bị phá; build/host test pass | Đã sửa, build/host tests pass R5 |
-| S3 | Thêm LDR demo thay nút lửa chính | diagram, config, sensors/SensorSnapshot, telemetry/display, wiring tests | Thay sáng→giá trị→cờ lửa→FSM; có ngưỡng/hysteresis và test ảnh/log | Code/diagram/log/core tests xong R5; chưa có ảnh/log MCU S5 |
-| S4 | Thêm servo cửa, giữ hai relay | diagram, config, output state/driver, thư viện/pwm, UI/log, tests | Các state đúng policy cửa; servo+còi không xung đột; relay giữ chức năng | Code/diagram/pulse và FSM tests xong R5; chuyển động thực chờ S5 |
-| S5 | Chốt nhánh local trên Wokwi | Firmware cuối local, hướng dẫn, ảnh/log/version | Checklist local bên dưới đủ, cập nhật KB bằng chứng; chưa tính AI TC là PASS | Đã có log boot R5 người dùng, MQ3628→FIRE, DHT đọc tốt; chưa có visual tải/servo hoặc đủ TC |
-| S6 | MQTT + hợp đồng + mock test | Network/contract modules, queue/task, config mẫu, mock Python, tests | Boot/reconnect không chặn local; parser/TTL/hợp nhất/subscription/hai chiều đúng | Chờ local; chi tiết chưa chốt |
-| S7 | Mô hình AI thật + tích hợp | Dataset manifest, train notebook, weights, infer/publish, metrics | Task đã chốt; split đúng; có metrics thật và video/webcam publish đúng contract | Làm sau; chưa chốt task |
-| S8 | Kiểm thử hệ thống và bằng chứng | 13×20 bảng lượt, TC bổ sung, ảnh/log/firmware/model IDs | Đủ lượt chạy thật, expected/observed rõ, fail được phân tích, sửa thì chạy lại phần ảnh hưởng | Chưa làm |
+| S3 | Thêm LDR demo thay nút lửa chính | diagram, config, sensors/SensorSnapshot, telemetry/display, wiring tests | Thay sáng→giá trị→cờ lửa→FSM; có ngưỡng/hysteresis và test ảnh/log | Code/diagram/log/core tests xong R5; đã có ADC LDR và xác nhận còi từ người dùng; S5 chưa đủ |
+| S4 | Thêm servo cửa, giữ hai relay | diagram, config, output state/driver, thư viện/pwm, UI/log, tests | Các state đúng policy cửa; servo+còi không xung đột; relay giữ chức năng | Code/diagram/pulse và FSM tests xong R5; người dùng xác nhận đóng cửa, đã thấy hai LED tải; còn chuỗi đầy đủ S5 |
+| S5 | Chốt nhánh local trên Wokwi | Firmware cuối local, hướng dẫn, ảnh/log/version | Checklist local đủ để đóng; AI TC nghiệm thu riêng | HOÃN theo người dùng28/10, chưa đủ L01–L10; không chặn triển khai S6 |
+| S6 | MQTT + hợp đồng + mock test | Network/contract/payload modules, queue/task, config mẫu, mock Python, tests | Parser/fusion/queue, hai chiều/reconnect và đo runtime local khi mạng lỗi | R6 code/build/host tests/PC broker smoke pass; chưa chạy runtime Wokwi |
+| S7 | Adapter/publisher + model AI | Adapter/replay/plugin và manifest; model/weights/metrics sau | Plugin/replay theo contract; model thật cần kiểm định riêng | R7 có khung, replay test pass; model/train/metrics HOÃN theo người dùng |
+| S8 | Kiểm thử và bằng chứng | Regression/capture/tracker + bảng13×20 | Tooling chạy được; nghiệm thu chỉ đóng khi đủ lượt thực/model/ảnh | R7 tooling/testhost xong; formal260NOT_RUN, không đánh hoàn tất nghiệm thu |
 | S9 | Đồng bộ và đóng gói báo cáo | DOCX, hình, tham khảo, phụ lục, repo/ZIP/Wokwi link | Nội dung đúng sản phẩm đã test, link mở được, nguồn/đóng góp/khai báo thật | Chưa làm |
 
 Sửa mô tả thiết kế trong báo cáo có thể tiến hành sau S1; không phải đợi S9 mới sửa mọi chương. Kết quả ở Chương5 chỉ điền sau phép thử tương ứng. Có thể khảo sát tài sản AI trong lúc test local, nhưng người dùng đã yêu cầu để phần AI làm sau, không tự triển khai trong lượt cập nhật KB này.
+
+<a id="s0"></a>
 
 ### S0 Checklist học lại qua đồ án
 
@@ -177,6 +204,8 @@ Vòng giải thích S0 ngày27/10/2026 đi qua linh kiện/GPIO/ADC/PWM, setup-l
 - [ ] H05: Tự dự đoán kết quả khi MQ qua ngưỡng hoặc nhấn lửa; hiểu vì sao hết nguy hiểm chưa tự về NORMAL và ACK không phải nút tắt nguy hiểm.
 - [ ] H06: Hiểu sample period khác reaction latency; biết AI và MQTT nằm ngoài code local hiện tại.
 
+<a id="s1"></a>
+
 ### S1 Checklist chốt thiết kế còn thiếu
 
 - [x] P01: Người dùng chốt giữ V1 ngày27/10/2026. Việc sửa board/hình trong DOCX vẫn chưa làm, theo A01/R01.
@@ -186,6 +215,8 @@ Vòng giải thích S0 ngày27/10/2026 đi qua linh kiện/GPIO/ADC/PWM, setup-l
 - [x] P05: Người dùng chốt D08 ngày27/10/2026: giữ nguyên nhân nguy hiểm nhiệt khi DHT mất dữ liệu đến mẫu hợp lệ chứng minh hết điều kiện; vẫn dừng bơm khi timeout60s. Timeout không phải bằng chứng nhiệt đã giảm; fault không ghi DANGER_CLEARED.
 - [x] P06: Đã ghi bảng đầu ra thiết kế đích dưới D04/D05 ngày27/10/2026. Đây là yêu cầu được chốt, chưa là code hoặc bằng chứng runtime.
 - [ ] P07: R5 đã chọn LDR32/100ms/ngưỡng500-750 ADC, servo33/0-90°/50Hz kênh8; **chưa khảo sát runtime** quan hệ ánh sáng–ADC và góc thực. Ghi ảnh/log trước khi đóng mục này.
+
+<a id="s2-s4"></a>
 
 ### S2–S4 Checklist implementation local
 
@@ -197,7 +228,13 @@ Vòng giải thích S0 ngày27/10/2026 đi qua linh kiện/GPIO/ADC/PWM, setup-l
 - [x] I06: Cập nhật wiring fixture/checks, core tests và hướng dẫn runtime; không sửa fixture chỉ để test pass nếu chưa đối chiếu linh kiện. — Đã thực hiện R5; bằng chứng build/host/hash ở cuối KB, quan sát runtime riêng ở S5.
 - [x] I07: Build ESP32 bản mới và chạy host/static tests phù hợp; lưu version/hash của source và diagram; chỉ retest thêm khi có thay đổi/fail/concern. — Đã thực hiện R5; bằng chứng build/host/hash ở cuối KB, quan sát runtime riêng ở S5.
 
+<a id="s5"></a>
+
 ### S5 Checklist runtime local bản có LDR và servo
+
+**HOÃN theo yêu cầu người dùng28/10/2026; các ô mở không chặn triển khai S6. Chưa được tính hoàn tất.**
+
+Đã có bằng chứng từng phần: [LDR và còi](evidence/local-r5-user-ldr-2026-10-28.txt), [LED tải sáng/RECOVERY](evidence/local-r5-user-servo-pending-2026-10-28.txt), [NORMAL trong log](evidence/local-r5-user-normal-2026-10-28.txt), [người dùng xác nhận đóng cửa](evidence/local-r5-user-door-closed-2026-10-28.txt). Các ô dưới vẫn mở vì mỗi ô bao gồm cả chuỗi/điều kiện chưa thử đầy đủ; không có nghĩa mọi chức năng đều chưa chạy.
 
 - [ ] L01: Boot đúng firmware/diagram/version; MQ thấp, DHT28/45, LDR nền; đầu ra đúng state boot đã chốt.
 - [ ] L02: MQ thấp→warning→danger→thấp: ADC đổi tương ứng, hysteresis đúng; LED tải COM-NO chứng minh hai relay.
@@ -210,18 +247,32 @@ Vòng giải thích S0 ngày27/10/2026 đi qua linh kiện/GPIO/ADC/PWM, setup-l
 - [ ] L09: Log chữ dễ hiểu; CSV đúng cột/nguồn/event và tuổi mẫu; thu số đo latency trong lúc đọc DHT/in log, nêu giới hạn.
 - [ ] L10: Lưu ảnh/log input/output của từng trường hợp, mã phiên bản và fail; cập nhật KB, không tuyên bố pass nếu chỉ thấy log lệnh relay.
 
+<a id="s6"></a>
+
 ### S6 Checklist MQTT và hợp nhất dùng mock
 
-- [ ] N01: Chốt thư viện/version/broker/topic/schema chung với bên Python; cấu hình mẫu không có secrets; broker dự phòng chỉ ghi khi đã test.
+Bổ sung bằng chứng người dùng: [summary log ESP→broker→PC](evidence/s6-user-mqtt-summary-2026-10-28.json),24snapshot ở15,864–38,864s; UTC0, MQ3628/localdanger, ai_accepted0. Đã chứng minh outbound telemetry, chưa chứng minh nhậnAI hoặc lỗiNTP kéo dài. R7 khởi động NTP sauWi-Fi với3server; cần xác nhận runtime, không bỏ validationUTC.
+
+**R6 đang triển khai/kiểm chứng.** [Contract, file flow, cấu hình và test](reference/s6-mqtt-contract.md). Chọn ESP-MQTT có sẵn trong SDK Arduino core2.0.17, thay đề xuất PubSubClient để lấy được metadata retained và quản lý socket bằng task. ArduinoJson6.21.5; Paho2.1.0. Broker demo HiveMQ/prefix riêng; chưa chứng minh ESP32 tới broker trong Wokwi. [Build](evidence/s6-build-2026-10-28.log), [host](evidence/s6-host-2026-10-28.log), [PC↔localhost broker](evidence/s6-broker-smoke-2026-10-28.log). Checkboxes đóng ở mức contract/core được ghi rõ; các ca mạng/latency trên MCU vẫn mở.
+
+- [x] N01: Chốt thư viện/version/broker demo/topic/schema dùng chung firmware/mock, cấu hình mẫu không secrets. — R6 chọn ESP-MQTT SDK, JSON6.21.5, Paho2.1.0, schema v1/TTL15s/confidence0.8; không có broker dự phòng đã test. ESP32↔broker thực còn chờ runtime.
 - [ ] N02: Local khởi động và tiếp tục hoạt động khi không Wi-Fi hoặc broker không phản hồi; reconnect có backoff và không chặn vòng local.
 - [ ] N03: MQTT hai chiều; subscribe lại sau mọi reconnect; test mất mạng từ boot và trong khi đang FIRE.
-- [ ] N04: Reject payload sai cú pháp/thiếu trường/sai type/nhãn lạ/confidence không hợp lệ/quá dài; gói lỗi không gia hạn freshness hợp lệ.
+- [x] N04: Parser reject sai cú pháp/thiếu/trùng/trường lạ/type/nhãn/confidence/size; gói lỗi không gia hạn freshness. — Host test chạy codeparser thật dướiASan/UBSanPASS; callbackdrop/flood trên MCU chờ runtime.
 - [ ] N05: Chốt TTL, thời gian gửi/nhận, sai lệch đồng hồ, bản tin cũ/tương lai/duplicate/retained và session restart; hiển thị AI mất/không khả dụng.
-- [ ] N06: max(local,AI hợp lệ): AI normal không hạ local danger; AI hết hạn không vô hiệu local; không cho payload PC bỏ qua FSM/timeout.
+- [x] N06: Core max(local,AI hợp lệ), AI normal/expired không hạ local, không bypassFSM/timeout/ACK. — Host fusion/TTL/source/timeout/ACKPASS; chưa phải MCU integrationPASS.
 - [ ] N07: Phân biệt source LOCAL/AI/cùng nguồn và các event; chọn QoS theo chiều thực tế; kiểm tra parser/buffer/flood giới hạn.
 - [ ] N08: Đo lại latency local khi mạng lỗi; ghi rõ mock dùng test protocol, chưa tính là AI đã làm.
 
-### S7 Checklist AI để làm sau
+<a id="s7"></a>
+
+### S7 Checklist adapter và AI thay sau
+
+Theo yêu cầu mới28/10: đã làm đường tích hợp để thay model sau; chưa train/tảiweights. [Hướng dẫn và giới hạn](s7-s8-guide.md). M01–M07 dưới đây là phần model thật vẫn mở; M08–M10 là khung đã thực hiện.
+
+- [x] M08: `ai_adapter.py` validation/contract; `ai_publish.py` replay hoặc plugin, confidence hữu hạn, timestamp capture; unknown/camera lỗi không tự phát bìnhthường. Unit test và replay qua localhostbrokerPASS; camera thật chưa chạy.
+- [x] M09: Giao diện `module:function` cho model riêng, nhận frameBGR; detector helperFire ưu tiênSmoke, khôngbox→unknown. Chưa khóa classifier/detector hoặc thêm temporalfilter chưa kiểm định.
+- [x] M10: Mẫu modelmanifest cóweights/hash/license/preprocessing/dataset/metrics đểnull với trạng tháiDEFERRED; logREPLAY_MOCK/PLUGIN_UNVERIFIED không tự biến thànhmodel thật.
 
 - [ ] M01: Kiểm kê dataset/notebook/weights/inference của thành viên phụ trách; chốt classifier hoặc detector và ghi quyết định thay D07.
 - [ ] M02: Manifest nguồn/license/số lượng/chia tập theo video hoặc nguồn; có ảnh nền và ảnh dễ nhầm, không để frame cùng video rò train/test.
@@ -231,7 +282,16 @@ Vòng giải thích S0 ngày27/10/2026 đi qua linh kiện/GPIO/ADC/PWM, setup-l
 - [ ] M06: Webcam/video→model→adapter→MQTT→ESP hoạt động; không có detection không đồng nghĩa cảnh chắc chắn an toàn; camera lỗi tách riêng.
 - [ ] M07: Chốt policy ảnh nến/bật lửa/ánh đỏ/hơi nước/che khuất, temporal filtering nếu chọn; nêu đánh đổi báo giả/bỏ sót bằng kết quả.
 
-### S8 Checklist nghiệm thu 13 tình huống gốc và phần bổ sung
+<a id="s8"></a>
+
+### S8 Checklist công cụ và nghiệm thu 13 tình huống
+
+**Đã hoàn thiện công cụ, chưa hoàn tất nghiệm thu.** [Report phần mềm R7](evidence/s7s8-final-checks-2026-10-28/report.json): build/host/unit/PC-broker smokePASS, hostscenario240PASS/20DEFERRED. Mọi lượt formal ở bảng gốc vẫnNOT_RUN; không chuyển kết quảHOST_SYNTHETIC sang kết quảWokwi.
+
+- [x] E05: Bộ13TC×20hàng regression core với virtualmillis;12TC×20PASS, TC11×20DEFERRED vì chưa cóảnh/model. ASan/UBSan; CSV ghi rõdomain/modelMOCK_ONLY.
+- [x] E06: `capture_mqtt.py` lưu JSONL exclusive với UTC/monotonic/topic/QoS/identity; `capture-summary` kiểm tra một số mâu thuẫn dữ liệu và phiên bản. PCfixture qua broker đã test; chưa chứng minh tải thực.
+- [x] E07: `s8_track.py` dùng duy nhất bảng260lượt gốc; record atomic/filelock/audit, từ chối host/mock domain hoặc modelmock cho model-dependentPASS. Unit tests dùng bảng tạm; bảng gốc không đổi.
+- [x] E08: `verify_project.py` một lệnh build/core/Python/scenarios/broker tùy chọn, log/hash/report; lỗi hoặc chạy chưa đủ stage không được báoPASS. Không chạy model/Wokwi hoặc tự ghiPASSnghiệmthu.
 
 Mỗi TC dưới đây cần20lượt thật, expected/observed, firmware/model version, thời gian, ảnh/log; không đánh `[x]` chỉ vì một lần thử hoặc unit test. Bảng lượt hiện có `../../tests/integration-results.csv` nằm ngoài repo firmware; giữ bảng này hoặc chuyển có kiểm soát khi đóng gói, không tự tạo bộ kết quả song song mâu thuẫn. Các TC bổ sung không thay thế13TC gốc.
 
@@ -255,6 +315,8 @@ Mỗi TC dưới đây cần20lượt thật, expected/observed, firmware/model 
 - [ ] E02: Có≥1ảnh minh chứng/TC và log phù hợp; minh chứng cả hai nhánh cùng chạy và nguồn kích hoạt.
 - [ ] E03: Thêm regression DHT nhiệt cao→lỗi, LDR biên, cửa ở từng state/timeout/ACK, boot không mạng, reconnect chậm và nhiều nguồn đồng thời.
 - [ ] E04: Xử lý mọi fail theo mức độ; không lấy18/20 hoặc tỉ lệ tổng để kết luận lỗi chức năng bắt buộc đã đạt. Sửa source/model thì chạy lại các tình huống bị ảnh hưởng.
+
+<a id="s9"></a>
 
 ### S9 Checklist báo cáo và gói nộp
 
@@ -307,7 +369,7 @@ Khi đóng một ô, thêm ngày, phiên bản và link bằng chứng ngay sau 
 - [Wiring và host tests R5](evidence/local-r5-host-test.log): 10nhóm core +20.000bước tổng hợp, ASan/UBSan; gồm regression DHT và policy cửa/LDR/pulse. Không tính thành lượt integration.
 - [Hash source/diagram/binary](evidence/local-r5-sha256.json): nhận diện phiên bản để thu bằng chứng tiếp.
 - [Giới hạn agent runtime](evidence/local-r5-runtime-status.txt): truy cập VS Code qua Computer Use timeout. Sau đó người dùng cung cấp [log boot R5](evidence/local-r5-user-boot.txt): đã chứng minh MCU chạy R5 và lệnh FIRE do MQ cao; chưa có ảnh tải/servo hoặc đủ các tình huống S5.
-- [Hướng dẫn test R5](phase2-testing.md): khởi động đúng bản, input nền, LDR/relay/servo/ACK/timeout và giới hạn thử lỗi DHT.
+- [Hướng dẫn test R5](archive/phase2-testing-r5.md): khởi động đúng bản, input nền, LDR/relay/servo/ACK/timeout và giới hạn thử lỗi DHT.
 
 Thông số LDR500/750 là lựa chọn demo ban đầu theo mạch chia áp (sáng tăng→ADC giảm), chưa được hiệu chuẩn bằng runtime. Không tự gọi100lux/20000lux luôn cho một ADC cố định. LDR nguồn3V3, MQ vẫn5V mô phỏng; không gọi đây là bản hardware đã an toàn/hiệu chuẩn. Analog hở dây có thể vẫn trong dải nên cờ hợp lệ/stale không bảo đảm phát hiện mọi lỗi dây.
 
@@ -382,3 +444,29 @@ Lưu [baseline ngay trước lượt này](evidence/final-readability-before-202
 Đổi cách trình bày nguồn: 23đường cấp nguồn/GND dài được ẩn bằng màu dây rỗng của Wokwi; thay bằng chú thích net cục bộ tại từng nhóm/chân. Các kết nối vẫn có trong JSON, không dùng ký hiệu nguồn giả hay nối ngầm mới. Ghi rõ5V/VIN,3V3 vàGND; không gộp nguồn. Legend thành hộp chữ nhiều dòng. Ghi chú bố cục/nguồn ở các mục lịch sử trước đó được thay thế bởi cách trình bày này.
 
 [Kiểm chứng cuối](evidence/final-readability-verification-2026-10-28.md):44/44cặp đầu nốiMATCH; mọi linh kiện và thuộc tính điện gốc giữ nguyên, các part thêm chỉ là chữ. WiringPASS, diffcheckPASS; không sửa firmware/ngưỡng/defaultgas trong lượt này. Preview hình học không có signal xuyên thân linh kiện theo hộp bao xấp xỉ; chưa thay cho render Wokwi thực. Stop/Start để nghiệm thu bố cục.
+
+### Khôi phục điều hướng checklist — 28/10/2026
+
+Người dùng hỏi bước tiếp theo và không thấy checklistS. Checklist cũ vẫn ở phần kế hoạch nhưng bị chìm dưới KB dài; thêm bảng tiến độS0–S9 và link trực tiếp ở đầu KB/README. Đồng bộ mô tảS3/S4/S5 với bằng chứng runtime đã nhận, không đánh PASS toàn bộ các ôL hoặc260lượt. Bước kế tiếp vẫn là hoàn tấtS5, sau đóS6MQTT/mock; chưa bắt đầu code mạng/AI.
+
+### Bypass S5 và bắt đầu S6 R6 — 28/10/2026
+
+Theo yêu cầu trực tiếp của người dùng: hoãnS5 để làmS6, không đợi local checklist hoàn tất và không giả lập đánhPASS. Triển khai networktask riêngcore0, ESP-MQTT SDK, queueRX4/telemetry1/event8, reconnect/backoff/subscription+SUBACK, UTC/NTP, strictparser256byte, TTL15s/future2s/replay, local+AI fusion và nguồn reasonmask256/512. GPIO/sơ đồ/defaultgas/còi không đổi. Chưa có model AI thật hoặc dashboard.
+
+[Hướng dẫn S6](reference/s6-mqtt-contract.md) có contract chung Python/C++, brokerconfig ignoredsecrets, QoS theo từng chiều, retained delivery caveatMQTT3.1.1 và bước test bằngmock. CSVR6 có39cột, cộtmức23 đổi tênmerged_level và thêmlocal_rule_level/ai_level. Log/LCD hiển thịmạng/freshness; maxloopgap là phép đo vònglặp, không phải latency vậtlý.
+
+BuildESP32, hostcore/parser/fusion/encoder/rollover, Pythonmockunit vàPC↔localhostbroker smokePASS. Không có bằng chứngESP32WokwiMQTT/reconnect/flood/latency lúc này; N02/N03/N05/N07/N08 chưa đóng đầy đủ. Các mục S5/13×20 chưa tự đổi sangPASS. Chưa commit/pushS6.
+
+### Hoàn thiện phần mềm S7–S8, hoãn model thật — 28/10/2026
+
+Người dùng muốn đi tớiS8 trước, model thay sau. Đã thêm adapter/replay/plugin và modelmanifest trống cóDEFERRED; công cụcapture, tracker/audit, một-lệnhsoftwarechecks và bộscenariohost. R7 đóngdấuidentity nguồn build vàboot_id trongtelemetry, thêmtrạngtháimạng/lệnhđầu ra đểthu bằngchứng. NTP chuyểnkhởitạo sauWi-Fi vàthêmserver dựphòng dựa trênlogUTC0; chưa khẳngđịnhfixruntime. Không đổiGPIO/diagram/ngưỡng/driver/FSM.
+
+[Kiểm tra cuối](evidence/s7s8-final-checks-2026-10-28/report.json): buildESP32, core/parser/fusion/encoder,11unitPython, PC-brokerreplay/capture vàhost240PASS/20DEFERRED. Bảng260lượtnghiệmthu giữnguyênhash/NOT_RUN. TC11 ảnh/model thật, metrics, camera thực, mạng/latencyMCU vàS5 còn hoãn/chờ. S9/DOCX không làm trong lượt này. Không tự commit/push.
+
+### Làm gọn workspace và điều hướng — 28/10/2026
+
+Người dùng thấy cấu trúc rối và hỏi bước tiếp theo. ThêmPCCC.code-workspace chỉ mở repo firmware, ẩn generated/build/venv và thêm taskbuild/check; không xóa dữ liệu. Đưa hướng dẫnR5 sangdocs/archive, contractS6 sangdocs/reference, cập nhật linkMarkdown, thêmproject-map và điểm vàoREADME. Không dời source/test/tools, Git, Word hoặc bảng260lượt. Bước tiếp theo là một lượt capture/replay trênWokwi cólog; model thật/S5/nghiệmthu còn giữ trạng thái đã ghi.
+
+### Kiểm chứng guide S7–S8 — 28/10/2026
+
+Đã chạy lại build, host core, 11 unit Python, 240 scenario host PASS/20 DEFERRED, replay dry-run và broker localhost smoke. Bảng nghiệm thu vẫn 260 NOT_RUN. Guide bổ sung điều kiện nền, khoảng replay 5 giây, bảng đầu ra mong đợi và cách phân biệt PUBACK với ESP thực nhận. Xem [kết quả và giới hạn](evidence/guide-verification-2026-10-28/README.md). Wokwi trực tiếp chưa chạy được vì truy cập VS Code qua Computer Use timeout; không lấy kết quả host/mock thay bằng chứng mô phỏng.

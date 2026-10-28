@@ -1,3 +1,5 @@
+> Lịch sử kiểm thử local R5. Bản hiện tại R6 đã thêm MQTT/mock; S5 local được người dùng hoãn. Xem [S6](../reference/s6-mqtt-contract.md); các ca local bên dưới vẫn dùng để regression. Bootheader/CSV hiện tại đã đổi (R6/39cột), không áp dụng nhầm yêu cầu37cột của R5.
+
 # Test local R5 trên Wokwi — S2 đến S5
 
 Bản R5 đã thêm LDR và servo, sửa giữ nguy hiểm nhiệt khi DHT mất dữ liệu. Build và test tự động không thay runtime. **S5 chưa được xác nhận**: công cụ truy cập VS Code timeout; chưa thu được ảnh/log chạy simulator của bản này. Không tính các bước dưới thành 260 lượt nghiệm thu khi chưa chạy và lưu từng lượt.
@@ -78,7 +80,7 @@ Mask:1=SMOKE_WARNING,2=SMOKE_DANGER,4=FLAME giả từLDR,8=TEMPERATURE,16=TEMP_
 
 ## 6 Ghi kết quả
 
-Lưu từng lượt: testID, firmware/hash, đầu vào, expected, observed, pass/fail, ảnh/log và ghi chú. Cập nhật [KB](KB.md) S5/L01–L10 khi có đủ bằng chứng; không đánh PASS cả13×20 từ một lượt smoke test. Host test ở `python3 test/run_host_tests.py` kiểm tra logic thuầnC++ và wiring, không chạy MCU/mô phỏng cơ khí.
+Lưu từng lượt: testID, firmware/hash, đầu vào, expected, observed, pass/fail, ảnh/log và ghi chú. Cập nhật [KB](../KB.md) S5/L01–L10 khi có đủ bằng chứng; không đánh PASS cả13×20 từ một lượt smoke test. Host test ở `python3 test/run_host_tests.py` kiểm tra logic thuầnC++ và wiring, không chạy MCU/mô phỏng cơ khí.
 
 Nguồn: [LDR Wokwi](https://docs.wokwi.com/parts/wokwi-photoresistor-sensor), [pin AO LDR](https://github.com/wokwi/wokwi-elements/blob/main/src/photoresistor-sensor-element.ts), [servo](https://docs.wokwi.com/parts/wokwi-servo), [LEDC core2.0.17 — mapping nhóm/kênh/timer](https://github.com/espressif/arduino-esp32/blob/2.0.17/cores/esp32/esp32-hal-ledc.c). Không áp dụng nhầm API core3.x cho môi trường core2.0.17 đã chốt.
 
@@ -89,6 +91,6 @@ Buzzer hiện volume0.25 (đã tăng0.1→0.5 khi chẩn đoán rồi giảm the
 
 ## Bố cục sơ đồ ngày28/10/2026
 
-Bản cuối chia INPUT bên trái (gồm DHT22), ESP32 giữa, LCD/relay/servo bên phải; STATUS/ALARM riêng cho còi và LED. Mọi nguồn được ghi rõ tại chỗ: 5V/VIN,3V3,GND. Các dây nguồn dài được ẩn về mặt hiển thị (màu rỗng), vẫn giữ nguyên endpoint điện; nhãn nguồn không phải linh kiện điện mới. Tín hiệu giữ màu camADC,xanh dươngDHT,xanh láđiều khiển/PWM,tímI2C; hộp legend giải thích cả màu nguồn. Fan GPIO25 là tên hiển thị theo yêu cầu, code vẫnVAN. [Đối chiếu bản cuối](evidence/final-readability-verification-2026-10-28.md) xác nhận44cặp chân và thuộc tính điện giữ nguyên. Stop/Start để nạp diagram; không cần build cho thay đổi bố cục. Chưa xác nhận render thực bằng UI.
+Bản cuối chia INPUT bên trái (gồm DHT22), ESP32 giữa, LCD/relay/servo bên phải; STATUS/ALARM riêng cho còi và LED. Mọi nguồn được ghi rõ tại chỗ: 5V/VIN,3V3,GND. Các dây nguồn dài được ẩn về mặt hiển thị (màu rỗng), vẫn giữ nguyên endpoint điện; nhãn nguồn không phải linh kiện điện mới. Tín hiệu giữ màu camADC,xanh dươngDHT,xanh láđiều khiển/PWM,tímI2C; hộp legend giải thích cả màu nguồn. Fan GPIO25 là tên hiển thị theo yêu cầu, code vẫnVAN. [Đối chiếu bản cuối](../evidence/final-readability-verification-2026-10-28.md) xác nhận44cặp chân và thuộc tính điện giữ nguyên. Stop/Start để nạp diagram; không cần build cho thay đổi bố cục. Chưa xác nhận render thực bằng UI.
 
-Bảng đối chiếu sau dọn tuyến dây: [44cặp đầu nối giữ nguyên](evidence/layout-cleanup-verification-2026-10-28.md).
+Bảng đối chiếu sau dọn tuyến dây: [44cặp đầu nối giữ nguyên](../evidence/layout-cleanup-verification-2026-10-28.md).

@@ -1,0 +1,61 @@
+{
+  "folders": [
+    {
+      "name": "PCCC — dự án đang dùng",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.git": true,
+      "**/.pio": true,
+      "**/.host-build": true,
+      "**/.venv": true,
+      "**/.venv-ai": true,
+      "**/__pycache__": true,
+      "**/.DS_Store": true
+    },
+    "search.exclude": {
+      "**/.pio/**": true,
+      "**/.host-build/**": true,
+      "**/.venv/**": true,
+      "**/.venv-ai/**": true,
+      "**/__pycache__/**": true,
+      "docs/evidence/**": true
+    },
+    "terminal.integrated.cwd": "${workspaceFolder}"
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "PCCC: Build ESP32",
+        "type": "process",
+        "command": "${env:HOME}/.platformio/penv/bin/pio",
+        "args": [
+          "run"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "PCCC: Kiểm tra phần mềm",
+        "type": "process",
+        "command": "${workspaceFolder}/.venv/bin/python",
+        "args": [
+          "tools/verify_project.py"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": []
+      }
+    ]
+  }
+}

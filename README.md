@@ -1,38 +1,72 @@
-# Firmware PCCC Nhóm 07 INT1461 — LOCAL R5
+# Firmware PCCC Nhóm07 — S7/S8 R7
 
-**S2–S4 đã có code, build ESP32 và test tự động pass. S5 chưa xác nhận runtime Wokwi.** Theo dõi duy nhất tại [KB](docs/KB.md); thao tác test tại [hướng dẫn R5](docs/phase2-testing.md). Chưa có MQTT/AI/dashboard. DOCX chưa sửa.
+**Đã có phần mềm tích hợp và công cụ kiểm thử tới S8, dùng mock; model thật thay sau theo yêu cầu.** S5 hoãn. S8 chưa hoàn tất nghiệm thu260lượt. [Tiến độ và checklist duy nhất](docs/KB.md#progress) · [Hướng dẫn hiện tại S7–S8](docs/s7-s8-guide.md) · [Contract MQTT S6](docs/reference/s6-mqtt-contract.md).
+
+## Bắt đầu tại đây
+
+1. TrongVSCode chọn **File → Open Workspace from File…** và mở [PCCC.code-workspace](PCCC.code-workspace).
+2. Đọc [bản đồ thư mục và vai trò từng file](docs/project-map.md).
+3. Xem [checklist S0–S9](docs/KB.md#progress), rồi thực hiện một lượt capture/replay theo hướng dẫn hiện tại.
+
+Workspace chỉ mở repo `firmware`, ẩn thư mục build/môi trườngPython; có sẵn task **Build ESP32** và **Kiểm tra phần mềm**. Hướng dẫnR5 nằm trong `docs/archive/`; contractMQTT nằm trong `docs/reference/`; hướng dẫn dùng hiện tại là `docs/s7-s8-guide.md`.
 
 ## Chạy
 
-Mở thư mục firmware trong VS Code, terminal tại đây:
+Mở thư mục firmware trong VS Code. Build rồi Stop/Start Wokwi:
 
 ```sh
 /Users/daianhdung/.platformio/penv/bin/pio run
-python3 test/run_host_tests.py
 ```
 
-Máy khác dùng `pio run` khi PlatformIO trong PATH. Stop hẳn Wokwi rồi Start Simulator để nạp cả firmware/diagram mới. Log phải có `LOCAL R5: LDR + SERVO + DHT HOLD`; mạch có LDR và servo thay nút đỏ, nút xanh ACK LOCAL R5. Không cần upload USB.
+Máy khác dùng `pio run` khi PlatformIO có trong PATH. Boot phải có `S7/S8 R7` và `Firmware: R7-<hash>`. Firmware tự tạo boot_id, MQTT có firmware_id để kiểm tra đang thu đúng bản. Không cần upload USB. Default MQ10ppm, LDR100lux, DHT28°C/45%, còi volume0.25; nếu simulator còn giữ slider cũ, đưaMQADC<1700 và LDRADC≥750, ACK an toàn khi cần.
 
-## Thiết kế đã triển khai
+## Một lệnh kiểm tra phần mềm
+
+```sh
+.venv/bin/python tools/verify_project.py
+```
+
+Build/core/Python/scenarios được chạy và lưu report/log/hash trongruns/. Không chạy Wokwi hoặc model. Bộ host có240PASS/20DEFERRED là test logic bằng virtualmillis, không phải240lượt nghiệm thu Wokwi. [Báo cáo đã chạy](docs/evidence/s7s8-final-checks-2026-10-28/report.json).
+
+## Thu log và thử replay
+
+Môi trường .venv có Paho2.1.0; nếu chưa có, tạo venv rồi cài `tools/requirements-mqtt.txt`. Chờ log `WiFi/MQTT/Sub/UTC: 1/1/1/1`, terminalA:
+
+```sh
+.venv/bin/python tools/capture_mqtt.py --out runs/s8-demo-01.jsonl --duration 60
+```
+
+TerminalB:
+
+```sh
+.venv/bin/python tools/ai_publish.py --backend replay --interval 5
+```
+
+Đây là kết quả AI viết sẵn, có thể kích còi/bơm/van/cửa trong mô phỏng. Camera/model lỗi hoặcunknown không tự phát nhãn bình thường. [Đọc log, thay model bằng plugin và ghi nghiệm thu](docs/s7-s8-guide.md).
+
+```sh
+.venv/bin/python tools/s8_track.py capture-summary --capture runs/s8-demo-01.jsonl
+.venv/bin/python tools/s8_track.py status
+```
+
+Mỗi capture dùng tênfile mới. Bảng260lượt gốc ởthư mục cha `../tests/integration-results.csv`; không tạo bảnPASS song song. Model thật/dataset/metrics/TC11 và lượt MCU còn chờ. DOCX/S9 chưa sửa.
+
+## Thiết kế giữ nguyên
 
 | Khối | Kết nối/hành vi |
 |---|---|
-| ESP32 | DOIT DevKit V1; espressif32@7.0.1, Arduino core2.0.17 |
-| MQ2 | AOUT→GPIO35; ADC1s,1800warning/2800danger; ngưỡng xuống<1700/<2700 |
-| LDR | AO→GPIO32, nguồn3V3;100ms; sáng tăng→ADC giảm;≤500lửa giả,≥750giải trừ |
-| DHT22 | DATA4/3V3/pull-up10k;3s;55°C clear<53°C,rate≥2°C/s |
-| Servo cửa | PWM33/V+VIN/GND;50Hz16bit/LEDC8 group1;0°đóng/90°mở |
-| Còi | GPIO27/LEDC0 group0/2kHz, không chung timer servo |
-| Relay bơm/van | GPIO26/25,npn HIGH bật; LED tải cam qua COM-NO |
-| ACK | GPIO19 activeLOW;debounce50ms,an toàn3s+cạnh nhấn mới |
-| LCD / LED | I2C21/22,0x27;đỏ14/xanh13 |
+| ESP32 | DOIT DevKitV1; espressif32@7.0.1, Arduino core2.0.17 |
+| MQ2 | AOUT→GPIO35; đọc1s, warning1800/danger2800ADC, clear<1700/<2700 |
+| LDR | AO→GPIO32/3V3;100ms, ADC≤500lửa giả/≥750giải trừ |
+| DHT22 | DATA4/3V3/pull-up10k;3s;55°C clear<53°C, rate≥2°C/s |
+| Servo | PWM33/V+VIN/GND;50Hz16bit,LEDC8/group1;0°đóng/90°mở |
+| Còi | GPIO27/LEDC0/group0/2kHz, timer khác servo |
+| Relay bơm/van | GPIO26/25,npn HIGH bật; tải quaCOM-NO |
+| ACK | GPIO19 activeLOW, debounce50ms, an toàn3s+cạnh nhấn mới |
+| LCD/LED | I2C21/22,0x27; đỏ14/xanh13 |
 
-Cửa mở khi FIRE, giữ mở ở RECOVERY, đóng sau ACK hợp lệ; WARNING trước FIRE không mở. Giữ nguyên nhân nhiệt cao/rate khi DHT lỗi hoặc stale, chỉ mẫu hợp lệ giải trừ; rate NaN không tự xóa chốt. Bơm vẫn dừng ở60s và khóa tái kích tới ACK an toàn. Mặc định log chữ gọn mỗi3giây (EVENT in ngay), có CSV37cột nếu chọn Csv trong config.h rồi build. Servo/relay trên log là lệnh, chưa có feedback điện.
+AI chỉ nâng mức qua max(local,AI hợp lệ), không trực tiếp bypassFSM/timeout/ACK. Cửa mở khi FIRE, giữ RECOVERY, đóng sau ACK hợp lệ. Bơm dừng ở60s và khóa tớiACK an toàn; giữ nguy hiểm nhiệt khiDHT lỗi. LogSerial3s vàEVENT ngay; CSV39cột. Lệnh trênlog chưa phải feedback cơ khí/tiếp điểm.
 
-## Kiểm chứng
+Mặc định mạng Wokwi-GUEST, broker demo HiveMQ:1883, prefix `ptit/nhom07/lab-7c49e2`. Copy `include/secrets.example.h`→`include/secrets.h` để cấu hình riêng (Gitignore), dùng prefix riêng mỗi nhóm. Socket/DNS ở network task; chưa nghiệm thu latency MCU khi mạng lỗi. SetPCCC_NETWORK_ENABLED0 rồi build để local-only.
 
-[Build R5](docs/evidence/local-r5-build.log), [host/wiring tests](docs/evidence/local-r5-host-test.log), [hash](docs/evidence/local-r5-sha256.json), [giới hạn runtime](docs/evidence/local-r5-runtime-status.txt). Host tests có regression mất DHT, policy cửa, LDR hysteresis và20.000bước tổng hợp; không thay260lượt Wokwi cuối. Truy cập VSCode qua CUA timeout nên chưa có ảnh/log MCU R5 hoặc số đo latency.
-
-Ngưỡng LDR là tham số demo ban đầu, cần kiểm tra S5 theo ADC thực. LDR không phải cảm biến lửa IR; ADC MQ chưa phải ppm. Không phát hiện mọi lỗi đứt dây analog bằng range/stale check. Mạch chỉ mô phỏng; phần cứng thật cần thiết kế nguồn/chuyển mức/tải/warmup/hiệu chuẩn riêng.
-
-Tài liệu tổng và bảng260lượt nằm ở thư mục cha repo firmware; khi nộp phải gom đầy đủ model/dataset/báo cáo/minh chứng. Không tự commit/push hoặc chuyển .git. Mô hình học thuật không thay thiết bị PCCC đạt chuẩn.
+Mạch là mô phỏng học thuật. ADCMQ chưa hiệu chuẩn ppm, LDR là demo không phải cảm biến lửa IR, chưa phát hiện mọi lỗi dây. Phần cứng thật cần thiết kế/hiệu chuẩn riêng. Source/state/test được lưu, không dùng host/mock thay các bằng chứng thực còn thiếu.
