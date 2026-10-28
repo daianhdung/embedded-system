@@ -1,0 +1,7 @@
+S6 MOCK ONLY | 127.0.0.1:51142 | ptit/nhom07/s6-local-test
+[TX 1 retained=0] {"v":1,"nhan":"lua","do_tin_cay":0.93,"ts_ms":1793164374087}
+[TX 2 retained=0] {"v":1,"nhan":"lua","do_tin_cay":0.93,"ts_ms":1793164374197}
+S6 MOCK ONLY | 127.0.0.1:51142 | ptit/nhom07/s6-local-test
+[WATCH subscribed]
+[RX ptit/nhom07/s6-local-test/device/esp32-01/telemetry retained=0] {"state":"NORMAL","mock_device":true}
+PASS localhost broker smoke: mock publish QoS1/receive and watch telemetry. No ESP32 or model involved.

@@ -1,0 +1,8 @@
+S6 MOCK ONLY | 127.0.0.1:52315 | ptit/nhom07/s6-local-test
+[TX 1 retained=0] {"v":1,"nhan":"lua","do_tin_cay":0.93,"ts_ms":1793173767573}
+[TX 2 retained=0] {"v":1,"nhan":"lua","do_tin_cay":0.93,"ts_ms":1793173767678}
+S6 MOCK ONLY | 127.0.0.1:52315 | ptit/nhom07/s6-local-test
+[WATCH subscribed]
+[RX ptit/nhom07/s6-local-test/device/esp32-01/telemetry retained=0] {"state":"NORMAL","mock_device":true}
+PASS S7 replay->MQTT2packets / unknown suppressed; S8 capture PC fixture. No ESP32/model/acceptance PASS.
+PASS localhost broker smoke: mock publish QoS1/receive and watch telemetry. No ESP32 or model involved.

@@ -1,0 +1,37 @@
+{
+  "source": "User-provided terminal log attachment29173630-ab4a-45bb-97e2-25ffe7de0cb7",
+  "source_sha256": "071b42d7b2024e27ea31a2b0b0e1337b9d550e2f8dcf489801e86cccff093827",
+  "telemetry_records": 24,
+  "observations": "ESP32 to broker to PC telemetry observed. AI reception and current exact firmware identity not established.",
+  "ranges": {
+    "uptime_ms": [
+      15864,
+      38864
+    ],
+    "ts_ms": [
+      0,
+      0
+    ],
+    "smoke_adc": [
+      3628,
+      3628
+    ],
+    "ai_level": [
+      0,
+      0
+    ],
+    "ai_accepted": [
+      0,
+      0
+    ],
+    "ai_rejected": [
+      0,
+      0
+    ],
+    "max_loop_gap_ms": [
+      139,
+      139
+    ]
+  },
+  "limitation": "15.864-38.864s segment only; UTC0, local smoke danger3628ADC; does not prove an NTP fault persists or AI packet rejection."
+}

@@ -1,0 +1,79 @@
+{
+  "domain": "SOFTWARE_CHECKS_NOT_ACCEPTANCE",
+  "started_utc": "2026-10-28T07:49:20.620369+00:00",
+  "formal_ledger": "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/tests/integration-results.csv",
+  "formal_ledger_before_sha256": "05830e572db76f7b963060c48cf1bb3f43060e411e8775e45be0a9bd3bbca784",
+  "stages": [
+    {
+      "name": "esp32-build",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/.platformio/penv/bin/pio",
+        "run"
+      ],
+      "seconds": 1.997,
+      "log": "esp32-build.log",
+      "sha256": "6823c7146dd7e33e6ceb5a424e8d50e1913b5369025544d5cd29c4530bcfa6cd"
+    },
+    {
+      "name": "host-core",
+      "status": "PASS",
+      "command": [
+        "/private/tmp/pccc-s6-tools/bin/python",
+        "test/run_host_tests.py"
+      ],
+      "seconds": 2.911,
+      "log": "host-core.log",
+      "sha256": "31597706c0c0c4a5ef12fda2234ec1c6bebfc4ea87b105f9f9ab84398b12595c"
+    },
+    {
+      "name": "python-tools",
+      "status": "PASS",
+      "command": [
+        "/private/tmp/pccc-s6-tools/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "test",
+        "-p",
+        "test_*.py"
+      ],
+      "seconds": 0.448,
+      "log": "python-tools.log",
+      "sha256": "20dfc376f9cccd101db864b8291cae66e4ff6528fa3fe610f84b46ef7ee86cd2"
+    },
+    {
+      "name": "s8-host-synthetic",
+      "status": "PASS",
+      "command": [
+        "/private/tmp/pccc-s6-tools/bin/python",
+        "tools/run_s8_host.py",
+        "--out",
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/docs/evidence/s7s8-software-checks-2026-10-28/s8-host-synthetic.csv"
+      ],
+      "seconds": 1.356,
+      "log": "s8-host-synthetic.log",
+      "sha256": "49e0f06d7bba236dad41954b0faedb1c8f687c701688172096411e04e8b8c7c6"
+    },
+    {
+      "name": "pc-localhost-broker-smoke",
+      "status": "PASS",
+      "command": [
+        "/private/tmp/pccc-s6-tools/bin/python",
+        "test/broker_smoke.py"
+      ],
+      "seconds": 5.146,
+      "log": "pc-localhost-broker-smoke.log",
+      "sha256": "619a5e79da4a6d14eb393be7876d929c1d65e1275c5b21e307e314e720103b2f"
+    }
+  ],
+  "model": "DEFERRED_MOCK_ONLY",
+  "runtime_wokwi": "NOT_RUN",
+  "real_image_metrics": "NOT_RUN",
+  "formal_ledger_unchanged": true,
+  "firmware_bin_sha256": "f21298c713d4e874c6570234e4daa471f645af22967f771458ca60859f263ab9",
+  "firmware_identity_header": "#pragma once\n#define PCCC_FIRMWARE_ID \"R7-ff4ea6a0f5395c1c\"\n",
+  "completed_utc": "2026-10-28T07:49:32.480259+00:00",
+  "software_status": "PASS"
+}

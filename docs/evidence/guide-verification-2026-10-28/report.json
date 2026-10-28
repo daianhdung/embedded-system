@@ -1,0 +1,112 @@
+{
+  "domain": "SOFTWARE_CHECKS_NOT_ACCEPTANCE",
+  "started_utc": "2026-10-28T08:46:55.177227+00:00",
+  "formal_ledger": "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/tests/integration-results.csv",
+  "formal_ledger_before_sha256": "05830e572db76f7b963060c48cf1bb3f43060e411e8775e45be0a9bd3bbca784",
+  "stages": [
+    {
+      "name": "esp32-build",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/.platformio/penv/bin/pio",
+        "run"
+      ],
+      "seconds": 2.288,
+      "log": "esp32-build.log",
+      "sha256": "db3f8cf8321be17b5e1e75c04f5228c8ea2f82c7615ed0dc4aee7abf29424102"
+    },
+    {
+      "name": "host-core",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/.venv/bin/python",
+        "test/run_host_tests.py"
+      ],
+      "seconds": 3.368,
+      "log": "host-core.log",
+      "sha256": "31597706c0c0c4a5ef12fda2234ec1c6bebfc4ea87b105f9f9ab84398b12595c"
+    },
+    {
+      "name": "python-tools",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "test",
+        "-p",
+        "test_*.py"
+      ],
+      "seconds": 0.408,
+      "log": "python-tools.log",
+      "sha256": "46b8e3ada4e69c85e80f1775520d6292b59bbf35b29ca592cd9e78e5fa93776f"
+    },
+    {
+      "name": "s8-host-synthetic",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/.venv/bin/python",
+        "tools/run_s8_host.py",
+        "--out",
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/runs/guide-verification-2026-10-28/s8-host-synthetic.csv"
+      ],
+      "seconds": 1.424,
+      "log": "s8-host-synthetic.log",
+      "sha256": "49e0f06d7bba236dad41954b0faedb1c8f687c701688172096411e04e8b8c7c6"
+    }
+  ],
+  "model": "DEFERRED_MOCK_ONLY",
+  "runtime_wokwi": "NOT_RUN",
+  "real_image_metrics": "NOT_RUN",
+  "formal_ledger_unchanged": true,
+  "firmware_bin_sha256": "f21298c713d4e874c6570234e4daa471f645af22967f771458ca60859f263ab9",
+  "firmware_identity_header": "#pragma once\n#define PCCC_FIRMWARE_ID \"R7-ff4ea6a0f5395c1c\"\n",
+  "completed_utc": "2026-10-28T08:47:02.669177+00:00",
+  "software_status": "PASS",
+  "source_sha256": {
+    "include/ai_contract.h": "2b41843d878babcffb2730fbeeaf4c618e302e1f7a888756eaf5970cba13a90b",
+    "include/config.h": "b6a1a685cf0aa363804845511d725cf65194be21d0967e1c7074b4c0d5f01e9c",
+    "include/display.h": "255f0f6ea8287c7c96792f88f8aebeb0895d60f33f1238955ec1b08507686501",
+    "include/firmware_identity.h": "07b28791ce8ab828c4e69ab9f0c63185814604b12270f5f633107bfe30ff1b8b",
+    "include/ldr_detector.h": "e292250b3e5120726e71aab9bbda0b8cb2f46e6f55806d0ecb1c0a350e31740a",
+    "include/mqtt_payload.h": "ea13896be3115093c728ded44492e548eb0838d13e7b5a1cc50784d91259199b",
+    "include/network.h": "c2ca5456c785363b713002328a06c95f114c13d9e053a77776ae787c1718fd6b",
+    "include/network_config.h": "7e8a53cb35eda35047905c39ec39df97d427036d3ac78f98975c09a4d36de432",
+    "include/outputs.h": "a1290d1edcc4a6ac0057df92fe962ea10ae1d0c18c935052ac099439e0118020",
+    "include/safety.h": "8507f7590912149154415fa8f3c3b909908080b72e4d8030c89694510ba23325",
+    "include/sample_timing.h": "308f707688bb25101941d8b7e235beecc23846bddd3d6bd78ac407720b2d315b",
+    "include/secrets.example.h": "85f5f0c79b3cdab232f00b4969c014216a87496aec91622a9dd1006aba82673f",
+    "include/sensors.h": "8e5543896a8cbcff1c6305b2482caa336efb49b19ec85636412a0e7f74dd8693",
+    "include/servo_signal.h": "e51d255d37f27b7116deb7347abc2f527391b1b9be8fb502b70953a09f67f41e",
+    "include/telemetry.h": "64f8f318c7ef40727b6b09a01cbafe74724c64d4e931433fa6381111f644f8ec",
+    "platformio.ini": "c5e7a5c075d68a06280263c9e3cf449e9684e9712d180ff04aa900c41c18224d",
+    "scripts/build_identity.py": "0a735e364841cf7d915f9901f47676b79a521b1ebba2ca14f2ce82a943d192a7",
+    "src/ai_contract.cpp": "952313c8169b4b916b7473c31737594d3ac2b9718cc53676809ee4cca6ecfd54",
+    "src/display.cpp": "3bb338c6b046d9e932140161a7750cae7e4749761c609dec180b3bc5d1d413a2",
+    "src/main.cpp": "1d314538e95dfb521b795d6aca8106c93790c5d3dd3375265acf42f8454112c3",
+    "src/mqtt_payload.cpp": "87125f702d846459229d624b0758dfb6e6b5330842bbf4b151f587ae6a4705eb",
+    "src/network.cpp": "d080f0a7fd497df596920a0c78e066f606071880b979b3c2f5245f06c5498406",
+    "src/outputs.cpp": "fa597589cc299e043da19991c6bf65095805096ddce51443a1d7e1231e84e364",
+    "src/safety.cpp": "1c3ca7ca6a84d71aa4eb6f1a2d7e0b1b13e2ee9960c5d099a0f635aaf5ebfc5b",
+    "src/sensors.cpp": "eab0d7d8caba2b080878ef1e48e38d7ca9d17dedc15686d192adc3766af63f1b",
+    "src/telemetry.cpp": "8eecfe9189612d382f8a49c52a9b4f753df07d6e96f58d1cfd4b42004e5f8ba2",
+    "test/broker_smoke.py": "8606b9e2279196810a47225bd22ee7da666e11d11ae25a0eb6c71e3441f956d8",
+    "test/host/test_ai.cpp": "b2067985c67b06ef4c9f35851493ad6d9b5dd27bb610aafb952d658d7258c194",
+    "test/host/test_s8_scenarios.cpp": "c1c3d562d2e1e76f023aee66cc61711294acbb81215530a135eb880d4eba38ca",
+    "test/host/test_safety.cpp": "d9f56643a5b3b34fb7d1bbe26439c3476cb4324865f52969b61ed537ee3e159b",
+    "test/run_host_tests.py": "2c8abd5bb63066be46ad9d8ac364414d85efcb2659ebeb186a4143873361eef7",
+    "test/test_mqtt_mock.py": "4d8978301d6a7f042dc1432ebb9b4937fad8ed59d7f06e373c3cfcaa718dad67",
+    "test/test_s7_s8_tools.py": "157990b62ac85c2f4eab731f5238fa57c9456d6a5c35d058022f45eeeb831562",
+    "test/verify_wiring.py": "5fa9ecf801713b3929ec12edcd5fc31ffcedb62266082ed7f770511ebf062d9b",
+    "tools/ai_adapter.py": "bbe7c8214c36e6836ba61c4fca2f0e6170b2a79eef9408b68bc5103f2f749a28",
+    "tools/ai_publish.py": "b2f580cb729b49b92d95e438e6fca67389ab54fdd46ceb96b83f43bcbd83f359",
+    "tools/capture_mqtt.py": "5501a45f2ce2bd2f2ce7b67ef95ea383957962c6fff4613a3b9eea0ac8f3bf30",
+    "tools/mqtt_mock.py": "991c7d418502110a40593f892c74359438dbc0cf5e3e559f67095a8254070b9a",
+    "tools/mqtt_transport.py": "66143a9f271f0244d8f33a1908cdd80816412959097733b65caa9ca034717034",
+    "tools/run_s8_host.py": "553fa78c68f5dbd52e35a8fb44638e9ac503a12dc601ceffcae113c2af348713",
+    "tools/s8_track.py": "4c66333970e5f2e5f4d34d8f6897a3ab0c016a567a33b75bf896a5606a778c81",
+    "tools/verify_project.py": "ba347c3a8dad70528a22b715ed666a2bde61c6fe4b9c1fc0fb33ba5fc7cff0dd"
+  }
+}
