@@ -1,0 +1,13 @@
+{
+  "status": "DEFERRED_BY_USER",
+  "model_id": null,
+  "task": null,
+  "weights_path": null,
+  "weights_sha256": null,
+  "license": null,
+  "label_mapping": null,
+  "preprocessing": null,
+  "dataset_manifest": null,
+  "independent_test_metrics": null,
+  "note": "Replay/plugin scaffolding is not a trained or evaluated model."
+}
