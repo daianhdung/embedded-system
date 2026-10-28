@@ -108,6 +108,7 @@ def capture_summary(path):
                 boot_ids=sorted(boots),fixture_records=fixtures,states=sorted(states),max_loop_gap_ms=max_gap,
                 missing_identity=not payloads or 'MISSING' in ids or 'MISSING' in boots or '' in boots,
                 declared_backend=metadata.get('ai_backend_declared_by_operator') if metadata else None,
+                declared_clock_domain=metadata.get('ai_clock_domain_declared_by_operator','UNSPECIFIED') if metadata else None,
                 data_invariant_violations=violations,
                 note='No automatic PASS. Compare test inputs, actual outputs/images and expected behavior.')
 

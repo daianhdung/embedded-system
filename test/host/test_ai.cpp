@@ -65,6 +65,24 @@ void parserCases() {
   assert(wrap.signal().fresh(5)); assert(!wrap.signal().fresh(15000));
   std::puts("PASS strict AI schema, malformed/type/range/size/duplicate/trailing/NUL, retained, replay, clock, age, TTL/rollover");
 }
+void slowSimulationClock() {
+  AiTracker tracker;
+  // PC is 98 seconds ahead of the device: normal UTC must still be rejected.
+  assert(accept(tracker,packet("lua","0.94",epoch+98000),epoch)==AiReject::Timestamp);
+  const char* labels[]={"binh_thuong","khoi","lua","binh_thuong"};
+  const int levels[]={0,1,2,0};
+  for (int i=0;i<4;++i) {
+    const int64_t deviceAnchor=epoch+i*1000;
+    const uint32_t receipt=100+i*1000;
+    assert(accept(tracker,packet(labels[i],"0.94",deviceAnchor),deviceAnchor+150,receipt)==AiReject::None);
+    assert(tracker.signal().level==levels[i]);
+    assert(tracker.signal().remainingMs==14850);
+    assert(accept(tracker,packet(labels[i],"0.94",deviceAnchor),deviceAnchor+150,receipt)==AiReject::Replay);
+  }
+  assert(!tracker.signal().fresh(3100+14850));
+  assert(accept(tracker,packet("lua","0.94",epoch),epoch+15000)==AiReject::Timestamp);
+  std::puts("PASS slow-simulation mapping: raw +98s rejected; mapped sequence accepted; replay and TTL unchanged");
+}
 void telemetryJson() {
   SensorSnapshot sensors; SafetySnapshot safety; NetworkSnapshot net;
   char buffer[2048];
@@ -126,4 +144,4 @@ void fusion() {
   std::puts("PASS AI/local max fusion, source masks, expiry/disconnect, recovery/ACK, sustained AI timeout lock");
 }
 }
-int main() { parserCases(); fusion(); telemetryJson(); }
+int main() { parserCases(); slowSimulationClock(); fusion(); telemetryJson(); }

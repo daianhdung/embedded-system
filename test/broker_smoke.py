@@ -82,6 +82,42 @@ async def main():
         assert any(row.get('payload',{}).get('firmware_id')=='FAKE_DEVICE_TEST' for row in captured)
         assert len(received)-before==2
         print('PASS S7 replay->MQTT2packets / unknown suppressed; S8 capture PC fixture. No ESP32/model/acceptance PASS.')
+        # Reproduce the user's 98-second PC/device clock offset with a slowly
+        # progressing fake ESP clock. Actual MQTT transport; no MCU involved.
+        import time
+        fake_start=time.monotonic()
+        fake_epoch=int(time.time()*1000)-98000
+        async def slow_device_clock():
+            while True:
+                telemetry=dict(fixture,mode='SIMULATION',wifi=True,mqtt=True,subscribed=True,
+                               clock_synced=True,ts_ms=fake_epoch+int((time.monotonic()-fake_start)*250))
+                sub.publish('ptit/nhom07/s6-local-test/device/esp32-01/telemetry',json.dumps(telemetry))
+                await asyncio.sleep(.1)
+        ticker=asyncio.create_task(slow_device_clock())
+        try:
+            before_mapped=len(received)
+            mapped=await asyncio.create_subprocess_exec(sys.executable,'tools/ai_publish.py',
+                '--input',str(source),'--host','127.0.0.1','--port',str(port),
+                '--prefix','ptit/nhom07/s6-local-test','--interval','0.1',
+                '--wokwi-clock','--expected-firmware-id','FAKE_DEVICE_TEST',
+                stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.STDOUT)
+            output,_=await asyncio.wait_for(mapped.communicate(),12)
+            assert mapped.returncode==0,output.decode()
+            records=[json.loads(line) for line in output.decode().splitlines()]
+            published=[row for row in records if row['event']=='PUBACK']
+            assert len(published)==2,records
+            assert len(received)-before_mapped==2
+            assert sum(row['event']=='UNAVAILABLE' for row in records)==1
+            assert all(row['clock_mapping']['timestamp_domain']=='WOKWI_SIMULATED_UTC' for row in published)
+            assert all(row['clock_mapping']['source_utc_ms']-row['packet']['ts_ms']>90000 for row in published)
+            assert published[1]['packet']['ts_ms']>published[0]['packet']['ts_ms']
+            assert all(set(row['packet'])=={'v','nhan','do_tin_cay','ts_ms'} for row in published)
+            print('PASS explicit Wokwi clock mapping: 98s offset, device at 25% speed, 2 mapped packets, unknown suppressed. FAKE_DEVICE_TEST only.')
+        finally:
+            ticker.cancel()
+            try: await ticker
+            except asyncio.CancelledError: pass
+
     sub.disconnect();sub.loop_stop()
     await broker.shutdown()
     print('PASS localhost broker smoke: mock publish QoS1/receive and watch telemetry. No ESP32 or model involved.')

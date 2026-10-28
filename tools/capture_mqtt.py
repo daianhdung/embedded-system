@@ -19,6 +19,7 @@ def main():
     p.add_argument('--prefix',default=DEFAULT_PREFIX)
     p.add_argument('--expected-firmware-id',default='UNSPECIFIED')
     p.add_argument('--ai-backend',choices=['MOCK','MODEL_UNVERIFIED','REAL_MODEL'],default='MOCK')
+    p.add_argument('--ai-clock-domain',choices=['UTC','WOKWI_SIMULATED_UTC'],default='UTC',help='Operator-declared publisher clock domain; not proof of runtime')
     a=p.parse_args()
     if not 0<a.duration<=86400: p.error('duration must be in(0,86400] seconds')
     run_id=uuid.uuid4().hex
@@ -33,7 +34,8 @@ def main():
                 f.write(json.dumps(row,allow_nan=False)+'\n');f.flush();count+=1
         write('metadata',domain='MQTT_OBSERVATION_NOT_ACCEPTANCE',host=a.host,port=a.port,
               prefix=a.prefix,expected_firmware_id=a.expected_firmware_id,
-              ai_backend_declared_by_operator=a.ai_backend)
+              ai_backend_declared_by_operator=a.ai_backend,
+              ai_clock_domain_declared_by_operator=a.ai_clock_domain)
         transport=MqttTransport(a.host,a.port,a.prefix)
         transport.watch_topic=a.prefix+'/device/esp32-01/+'
         original_connect=transport.client.on_connect
