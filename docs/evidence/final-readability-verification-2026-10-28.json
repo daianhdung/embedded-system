@@ -1,0 +1,23 @@
+{
+  "endpoint_pairs": "44/44 MATCH",
+  "all_original_electrical_parts_and_attrs": "MATCH",
+  "gas_default_ppm": 10,
+  "buzzer_volume": "0.25",
+  "hidden_power_links": 23,
+  "signal_lengths_approx": {
+    "pump:IN": {
+      "before_px": 654.0,
+      "after_px": 484.0
+    },
+    "valve:IN": {
+      "before_px": 623.7,
+      "after_px": 583.7
+    },
+    "door:PWM": {
+      "before_px": 782.3,
+      "after_px": 722.3
+    }
+  },
+  "before_sha256": "497512e28ccbd44c593ccaa67d44620053f8873d109f3f43134236ef1ef12ed9",
+  "after_sha256": "2429e6a219397bc31177c33b56145d582c6778a95aa3e981859e91800eaba1a6"
+}

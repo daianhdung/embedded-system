@@ -360,3 +360,25 @@ Thay đổi chẩn đoán: volume0.1→0.5 trong diagram; thêm outputDiagnostic
 Commit lần này chỉ trong Git firmware; không bao gồm sửa DOCX hoặc tài liệu ngoài repo, không push. Có code local/FSM/DHT hold/LDR/servo, log gọn3s, chẩn đoán PWM, KB/guide/tests và bằng chứng tương ứng.
 
 Kiểm tra trước commit28/10/2026: [build SUCCESS](evidence/precommit-build-2026-10-28.log), [wiring và10nhóm host tests PASS](evidence/precommit-host-test-2026-10-28.log). Log build đã chuẩn hóa khoảng trắng cuối dòng để kiểm tra diff, không thay kết quả. Không đưa.pio/.host-build vào commit.
+
+### Giảm âm và sắp xếp sơ đồ ngày28/10/2026
+
+Người dùng yêu cầu còi nhỏ hơn và dây gọn hơn. Đổi volume0.5→0.25, giữ mode và tần số; đồng bộ boot header. Bố trí cảm biến trái, ESP32 giữa, LCD/relay/servo phải, còi/LED dưới; thêm nhãn, tách đường nguồn ra biên và route vuông góc. Đỏ5V/cam3V3/đenGND, tímADC-PWM/xanh ládigital/xanh dươngI2C. So sánh netlist với commit04d3aca: giữ nguyên44cặp chân nối, tất cả GPIO và thuộc tính điện khác; không thay FSM hoặc ngưỡng. Static wiring pass. Đã xem preview route hình học nội bộ (không phải render Wokwi thật); cần reload simulator để xác nhận hiển thị thực.
+
+### Dọn riêng bố cục theo yêu cầu chi tiết ngày28/10/2026
+
+Lưu [baseline trước khi sửa](evidence/layout-cleanup-before-2026-10-28.json) và [bảng đầu nối gốc](evidence/layout-cleanup-connections-before-2026-10-28.md). Sắp lại input trái/controller giữa/output phải, DHT trái-dưới, ACK dưới-trái, relay xếp dọc, servo dưới-phải. Route ngang/dọc, nguồn5V/3V3/GND riêng; quy ước hiện tại: đỏ5V,hồng3V3,đenGND,camADC,xanh dươngDHT,xanh ládigital/PWM,tímI2C. Quy ước này thay phần màu ở ghi chú bố cục trước đó.
+
+[Đối chiếu sau sửa](evidence/layout-cleanup-verification-2026-10-28.md):44/44 cặp đầu nối không đổi; mọi linh kiện và thuộc tính điện gốc giữ nguyên, chỉ thêm3nhãn chữ phân vùng. GPIO25 vẫnVAN theo source, không tự đổi thànhFan. Volume0.25 đã có trước lượt này và được giữ nguyên. Không sửa C++/FSM/GPIO/ngưỡng trong lượt này. Wiring staticPASS; preview hình học nội bộ không thay cho render Wokwi thực. Cần reload simulator để nghiệm thu hiển thị.
+
+### Đầu vào nền yên lặng khi Start — 28/10/2026
+
+Người dùng yêu cầu Start không tự hú còi. MQ-2 trong diagram trước đó khởi tạo400ppm, có thể tạo ADC vượt ngưỡng local ngay sau lần đọc đầu; mức giữa slider không phải mức an toàn của FSM. Đổi riêng gas.attrs.ppm400→10 để demo khởi động ở nền thấp. Giữ LDR100lux và DHT28°C/45%, không sửa ngưỡng1800/2800, hysteresis, dây/GPIO hoặc vô hiệu hóa còi. Chỉ thay đầu vào mô phỏng mặc định, không hiệu chuẩn ppm của firmware. Kiểm tra JSON chỉ khác đúng thuộc tính ppm và wiringPASS; chưa xác nhận runtime sau reload. Stop rồi Start mới nạp mặc định; restart MCU trong lượt mô phỏng đang chạy có thể vẫn giữ mức slider đã chỉnh. Nếu còn state chốt sau hạ đầu vào, an toàn3s rồi thả/nhấn ACK mới.
+
+### Final readability-only pass — 28/10/2026
+
+Lưu [baseline ngay trước lượt này](evidence/final-readability-before-2026-10-28.json), gồm gas10ppm và volume0.25. DHT chuyển hoàn toàn vào cột INPUT; STATUS/ALARM gom còi/đỏ/xanh; tách các lane điều khiển, kéo cụm relay/servo gần hơn và bỏ detour chữ nhật. Mỗi tín hiệu Pump/Fan/Servo ngắn hơn baseline theo cùng mô hình hình học. Nhãn Fan GPIO25 là alias hiển thị theo yêu cầu; idvalve và vai tròVAN trong firmware không đổi.
+
+Đổi cách trình bày nguồn: 23đường cấp nguồn/GND dài được ẩn bằng màu dây rỗng của Wokwi; thay bằng chú thích net cục bộ tại từng nhóm/chân. Các kết nối vẫn có trong JSON, không dùng ký hiệu nguồn giả hay nối ngầm mới. Ghi rõ5V/VIN,3V3 vàGND; không gộp nguồn. Legend thành hộp chữ nhiều dòng. Ghi chú bố cục/nguồn ở các mục lịch sử trước đó được thay thế bởi cách trình bày này.
+
+[Kiểm chứng cuối](evidence/final-readability-verification-2026-10-28.md):44/44cặp đầu nốiMATCH; mọi linh kiện và thuộc tính điện gốc giữ nguyên, các part thêm chỉ là chữ. WiringPASS, diffcheckPASS; không sửa firmware/ngưỡng/defaultgas trong lượt này. Preview hình học không có signal xuyên thân linh kiện theo hộp bao xấp xỉ; chưa thay cho render Wokwi thực. Stop/Start để nghiệm thu bố cục.

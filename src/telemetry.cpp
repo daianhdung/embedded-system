@@ -80,7 +80,7 @@ void printTelemetryHeader() {
     printLine("Log gon: moi %lu ms | EVENT in ngay | Muc: 0=an toan,1=canh bao,2=nguy hiem",
         static_cast<unsigned long>(Config::kLogIntervalMs));
     Serial.println("Cua/relay tren log la LENH, chua co feedback vi tri/tai.");
-    Serial.println("AUDIO DIAG: volume Wokwi 0.5; PWM readback khong phai do song GPIO.");
+    Serial.println("AUDIO DIAG: volume Wokwi 0.25; PWM readback khong phai do song GPIO.");
   }
   if (includesCsv()) {
     Serial.println("uptime_ms,smoke_adc,flame,temperature_c,humidity_pct,temp_rate_c_s,fast_valid,fast_sample_ms,dht_valid,dht_attempt_ms,dht_age_ms,dht_attempts,dht_errors,ack_raw,state,trigger_source,relay_pump,relay_valve,mode,record_type,previous_state,transition_reason,local_level,active_reason_mask,latched_reason_mask,suppression_locked,ack_ready,buzzer,red_led,green_led,ldr_adc,ldr_valid,ldr_sample_ms,ldr_age_ms,door_open,door_angle_cmd,thermal_unconfirmed");

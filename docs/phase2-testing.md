@@ -38,7 +38,7 @@ LDR không phân biệt lửa với đèn sáng. Mạch và mức nguồn ở đ
 ## 3 Bắt đầu ở nền
 
 1. Chọn LDR, đặt ánh sáng khoảng100lux (mạch mặc định100lux). Xem log LDR, bảo đảm ADC≥750 và không phát hiện lửa giả.
-2. Hạ MQ đến khi ADC<1700. DHT28°C/45%; thả ACK. Đợi DHT đọc tốt.
+2. MQ mặc định10ppm khi Stop/Start mới (đã hạ từ400ppm để khởi động yên lặng). Kiểm tra ADC<1700; nếu slider đang giữ giá trị của lượt cũ, hạ MQ về nền. DHT28°C/45%; thả ACK. Đợi DHT đọc tốt.
 3. Nếu đã có báo động do giá trị ban đầu, đợi đầu vào an toàn3s rồi thả/nhấn ACK mới >0,1s. Hệ phải NORMAL, xanh sáng, hai LED tải và còi tắt; cửa lệnh0°.
 
 ## 4 Test theo thứ tự
@@ -84,4 +84,11 @@ Nguồn: [LDR Wokwi](https://docs.wokwi.com/parts/wokwi-photoresistor-sensor), [
 
 ## Chẩn đoán âm thanh và servo ngày28/10/2026
 
-Buzzer volume0.5 (trước0.1). Sau build/Stop-Start phải có boot line AUDIO DIAG và dòng PWM doc lai mỗi3s. FIRE mong đợi coi2000Hz/cua50Hz/duty4915; NORMAL coi0Hz/cua50Hz/duty1638. Đây là readback thanh ghi, chưa đo sóng điện hoặc chuyển động. Nếu còi lệnhBAT nhưng0Hz, gửi log để kiểm tra driver; nếu2000Hz mà không nghe, kiểm tra âm lượng/mute củaVSCode/thiết bị phát rồi gửi ảnh buzzer. Mở/đóng servo phải đối chiếu cặp lệnh0/90vàquan sát tay servo. Giữ MQ<1700 khi test riêngLDR; logMQ3543vẫn là nguồn nguy hiểm dù hạLDR.
+Buzzer hiện volume0.25 (đã tăng0.1→0.5 khi chẩn đoán rồi giảm theo yêu cầu người dùng). Sau build/Stop-Start phải có boot line AUDIO DIAG và dòng PWM doc lai mỗi3s. FIRE mong đợi coi2000Hz/cua50Hz/duty4915; NORMAL coi0Hz/cua50Hz/duty1638. Đây là readback thanh ghi, chưa đo sóng điện hoặc chuyển động. Nếu còi lệnhBAT nhưng0Hz, gửi log để kiểm tra driver; nếu2000Hz mà không nghe, kiểm tra âm lượng/mute củaVSCode/thiết bị phát rồi gửi ảnh buzzer. Mở/đóng servo phải đối chiếu cặp lệnh0/90vàquan sát tay servo. Giữ MQ<1700 khi test riêngLDR; logMQ3543vẫn là nguồn nguy hiểm dù hạLDR.
+
+
+## Bố cục sơ đồ ngày28/10/2026
+
+Bản cuối chia INPUT bên trái (gồm DHT22), ESP32 giữa, LCD/relay/servo bên phải; STATUS/ALARM riêng cho còi và LED. Mọi nguồn được ghi rõ tại chỗ: 5V/VIN,3V3,GND. Các dây nguồn dài được ẩn về mặt hiển thị (màu rỗng), vẫn giữ nguyên endpoint điện; nhãn nguồn không phải linh kiện điện mới. Tín hiệu giữ màu camADC,xanh dươngDHT,xanh láđiều khiển/PWM,tímI2C; hộp legend giải thích cả màu nguồn. Fan GPIO25 là tên hiển thị theo yêu cầu, code vẫnVAN. [Đối chiếu bản cuối](evidence/final-readability-verification-2026-10-28.md) xác nhận44cặp chân và thuộc tính điện giữ nguyên. Stop/Start để nạp diagram; không cần build cho thay đổi bố cục. Chưa xác nhận render thực bằng UI.
+
+Bảng đối chiếu sau dọn tuyến dây: [44cặp đầu nối giữ nguyên](evidence/layout-cleanup-verification-2026-10-28.md).

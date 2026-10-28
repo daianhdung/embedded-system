@@ -6,24 +6,24 @@
     {
       "type": "wokwi-esp32-devkit-v1",
       "id": "esp",
-      "top": 0,
-      "left": 0,
+      "top": 180,
+      "left": 440,
       "attrs": {}
     },
     {
       "type": "wokwi-gas-sensor",
       "id": "gas",
-      "top": -100,
-      "left": -230,
+      "top": 60,
+      "left": 60,
       "attrs": {
-        "ppm": "400"
+        "ppm": "10"
       }
     },
     {
       "type": "wokwi-dht22",
       "id": "dht",
-      "top": -100,
-      "left": 210,
+      "top": 310,
+      "left": 80,
       "attrs": {
         "temperature": "28",
         "humidity": "45"
@@ -32,8 +32,8 @@
     {
       "type": "wokwi-pushbutton",
       "id": "ack",
-      "top": 210,
-      "left": -210,
+      "top": 510,
+      "left": 60,
       "attrs": {
         "color": "blue",
         "label": "ACK LOCAL R5"
@@ -42,8 +42,8 @@
     {
       "type": "wokwi-lcd1602",
       "id": "lcd",
-      "top": -70,
-      "left": 330,
+      "top": 80,
+      "left": 800,
       "attrs": {
         "pins": "i2c",
         "i2cAddress": "0x27"
@@ -52,8 +52,8 @@
     {
       "type": "wokwi-relay-module",
       "id": "pump",
-      "top": 160,
-      "left": 340,
+      "top": 370,
+      "left": 700,
       "attrs": {
         "transistor": "npn"
       }
@@ -61,8 +61,8 @@
     {
       "type": "wokwi-relay-module",
       "id": "valve",
-      "top": 160,
-      "left": 510,
+      "top": 490,
+      "left": 700,
       "attrs": {
         "transistor": "npn"
       }
@@ -70,17 +70,17 @@
     {
       "type": "wokwi-buzzer",
       "id": "buzzer",
-      "top": 290,
-      "left": 190,
+      "top": 770,
+      "left": 440,
       "attrs": {
-        "volume": "0.5"
+        "volume": "0.25"
       }
     },
     {
       "type": "wokwi-led",
       "id": "red",
-      "top": 300,
-      "left": 330,
+      "top": 770,
+      "left": 570,
       "attrs": {
         "color": "red"
       }
@@ -88,8 +88,8 @@
     {
       "type": "wokwi-resistor",
       "id": "r_red",
-      "top": 370,
-      "left": 330,
+      "top": 845,
+      "left": 540,
       "attrs": {
         "value": "220"
       }
@@ -97,8 +97,8 @@
     {
       "type": "wokwi-led",
       "id": "green",
-      "top": 300,
-      "left": 430,
+      "top": 770,
+      "left": 680,
       "attrs": {
         "color": "green"
       }
@@ -106,8 +106,8 @@
     {
       "type": "wokwi-resistor",
       "id": "r_green",
-      "top": 370,
-      "left": 430,
+      "top": 845,
+      "left": 650,
       "attrs": {
         "value": "220"
       }
@@ -115,8 +115,8 @@
     {
       "type": "wokwi-resistor",
       "id": "r_dht",
-      "top": -165,
-      "left": 220,
+      "top": 385,
+      "left": 170,
       "attrs": {
         "value": "10000"
       }
@@ -124,8 +124,8 @@
     {
       "type": "wokwi-led",
       "id": "pump_load",
-      "top": 480,
-      "left": 340,
+      "top": 370,
+      "left": 940,
       "attrs": {
         "color": "orange",
         "label": "BOM"
@@ -134,8 +134,8 @@
     {
       "type": "wokwi-resistor",
       "id": "pump_load_r",
-      "top": 550,
-      "left": 340,
+      "top": 430,
+      "left": 900,
       "attrs": {
         "value": "330"
       }
@@ -143,8 +143,8 @@
     {
       "type": "wokwi-led",
       "id": "valve_load",
-      "top": 480,
-      "left": 510,
+      "top": 490,
+      "left": 940,
       "attrs": {
         "color": "orange",
         "label": "VAN"
@@ -154,7 +154,7 @@
       "type": "wokwi-resistor",
       "id": "valve_load_r",
       "top": 550,
-      "left": 510,
+      "left": 900,
       "attrs": {
         "value": "330"
       }
@@ -162,8 +162,8 @@
     {
       "type": "wokwi-photoresistor-sensor",
       "id": "ldr",
-      "top": 70,
-      "left": -240,
+      "top": 190,
+      "left": 60,
       "attrs": {
         "lux": "100",
         "rl10": "50",
@@ -173,26 +173,260 @@
     {
       "type": "wokwi-servo",
       "id": "door",
-      "top": 300,
-      "left": -200,
+      "top": 610,
+      "left": 700,
       "attrs": {}
     },
     {
       "type": "wokwi-text",
       "id": "label_ldr",
-      "top": 40,
-      "left": -240,
+      "top": 165,
+      "left": 60,
       "attrs": {
-        "text": "LDR DEMO: sang tang -> ADC giam"
+        "text": "LDR ADC32"
       }
     },
     {
       "type": "wokwi-text",
       "id": "label_door",
-      "top": 400,
-      "left": -210,
+      "top": 750,
+      "left": 700,
       "attrs": {
-        "text": "CUA: 0 dong / 90 mo (lenh)"
+        "text": "DOOR: 0 CLOSED / 90 OPEN"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_mq",
+      "top": 25,
+      "left": 60,
+      "attrs": {
+        "text": "MQ-2 ADC35"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_esp",
+      "top": 140,
+      "left": 440,
+      "attrs": {
+        "text": "ESP32 V1"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_dht",
+      "top": 275,
+      "left": 60,
+      "attrs": {
+        "text": "DHT22 GPIO4"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_lcd",
+      "top": 45,
+      "left": 800,
+      "attrs": {
+        "text": "LCD SDA21/SCL22"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_pump",
+      "top": 335,
+      "left": 700,
+      "attrs": {
+        "text": "Pump GPIO26"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_valve",
+      "top": 455,
+      "left": 700,
+      "attrs": {
+        "text": "Fan GPIO25 (source: VAN)"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_servo",
+      "top": 575,
+      "left": 700,
+      "attrs": {
+        "text": "Servo GPIO33"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_status",
+      "top": 740,
+      "left": 440,
+      "attrs": {
+        "text": "Buzzer GPIO27"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_wires",
+      "top": 650,
+      "left": 60,
+      "attrs": {
+        "text": "+------------------------------+\n| WIRE / NET LEGEND            |\n| 5V    RED     / VIN          |\n| 3V3   PINK    / ESP 3V3      |\n| GND   BLACK  / COMMON       |\n| ADC ORANGE | DATA BLUE       |\n| CONTROL GREEN | I2C PURPLE   |\n| Power links: local labels   |\n| (long supply wires hidden)  |\n+------------------------------+"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "zone_inputs",
+      "left": 60,
+      "top": -25,
+      "attrs": {
+        "text": "INPUT / SENSORS"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "zone_controller",
+      "left": 440,
+      "top": -25,
+      "attrs": {
+        "text": "CONTROLLER"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "zone_outputs",
+      "left": 700,
+      "top": -25,
+      "attrs": {
+        "text": "OUTPUT / ACTUATORS"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "status_group",
+      "left": 440,
+      "top": 705,
+      "attrs": {
+        "text": "STATUS / ALARM"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "red_label",
+      "left": 555,
+      "top": 740,
+      "attrs": {
+        "text": "RED GPIO14"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "green_label",
+      "left": 665,
+      "top": 740,
+      "attrs": {
+        "text": "GREEN GPIO13"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "ack_label",
+      "left": 60,
+      "top": 570,
+      "attrs": {
+        "text": "ACK GPIO19 / GND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_gas",
+      "left": 60,
+      "top": 145,
+      "attrs": {
+        "text": "VCC: 5V | GND: GND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_ldr",
+      "left": 60,
+      "top": 255,
+      "attrs": {
+        "text": "VCC: 3V3 | GND: GND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_dht",
+      "left": 60,
+      "top": 435,
+      "attrs": {
+        "text": "VCC: 3V3 | GND: GND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_pullup",
+      "left": 170,
+      "top": 365,
+      "attrs": {
+        "text": "10k -> 3V3"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_lcd",
+      "left": 800,
+      "top": 215,
+      "attrs": {
+        "text": "VCC: 5V | GND: GND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_pump",
+      "left": 850,
+      "top": 320,
+      "attrs": {
+        "text": "VCC: 5V | GND: GND\nCOM: 3V3 | load C: GND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_valve",
+      "left": 850,
+      "top": 450,
+      "attrs": {
+        "text": "VCC: 5V | GND: GND\nCOM: 3V3 | load C: GND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_servo",
+      "left": 700,
+      "top": 720,
+      "attrs": {
+        "text": "V+: 5V | GND: GND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_status",
+      "left": 440,
+      "top": 925,
+      "attrs": {
+        "text": "Buzzer pin1 / LED cathodes: GND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "power_esp",
+      "left": 440,
+      "top": 35,
+      "attrs": {
+        "text": "POWER NETS\n5V = VIN\n3V3 = ESP 3V3\nGND = ESP GND.1"
       }
     }
   ],
@@ -212,254 +446,316 @@
     [
       "gas:VCC",
       "esp:VIN",
-      "red",
+      "",
       []
     ],
     [
       "gas:GND",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "lcd:VCC",
       "esp:VIN",
-      "red",
+      "",
       []
     ],
     [
       "lcd:GND",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "pump:VCC",
       "esp:VIN",
-      "red",
+      "",
       []
     ],
     [
       "pump:GND",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "valve:VCC",
       "esp:VIN",
-      "red",
+      "",
       []
     ],
     [
       "valve:GND",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "dht:VCC",
       "esp:3V3",
-      "red",
+      "",
       []
     ],
     [
       "dht:GND",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "dht:SDA",
       "esp:D4",
-      "green",
-      []
+      "blue",
+      [
+        "v35.1",
+        "h495.5",
+        "v-160"
+      ]
     ],
     [
       "gas:AOUT",
       "esp:D35",
       "orange",
-      []
+      [
+        "h113",
+        "v166.4"
+      ]
     ],
     [
       "ack:1.l",
       "esp:D19",
       "green",
-      []
+      [
+        "h-20",
+        "v-48",
+        "h580",
+        "v-222.8"
+      ]
     ],
     [
       "ack:2.l",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "lcd:SDA",
       "esp:D21",
-      "green",
-      []
+      "purple",
+      [
+        "h-134",
+        "v111.9"
+      ]
     ],
     [
       "lcd:SCL",
       "esp:D22",
-      "blue",
-      []
+      "purple",
+      [
+        "h-114",
+        "v73.5"
+      ]
     ],
     [
       "pump:IN",
       "esp:D26",
       "green",
-      []
+      [
+        "h-310",
+        "v-119"
+      ]
     ],
     [
       "valve:IN",
       "esp:D25",
       "green",
-      []
+      [
+        "h-295",
+        "v-248.7"
+      ]
     ],
     [
       "buzzer:2",
       "esp:D27",
       "green",
-      []
+      [
+        "v1",
+        "h-132",
+        "v-564.2"
+      ]
     ],
     [
       "buzzer:1",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "esp:D14",
       "r_red:1",
       "green",
-      []
+      [
+        "h-130",
+        "v575",
+        "h215",
+        "v-24.35"
+      ]
     ],
     [
       "r_red:2",
       "red:A",
       "green",
-      []
+      [
+        "h-3.8"
+      ]
     ],
     [
       "red:C",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "esp:D13",
       "r_green:1",
       "green",
-      []
+      [
+        "h-160",
+        "v575.5",
+        "h355",
+        "v-44.35"
+      ]
     ],
     [
       "r_green:2",
       "green:A",
       "green",
-      []
+      [
+        "h-3.8"
+      ]
     ],
     [
       "green:C",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "r_dht:1",
       "esp:3V3",
-      "red",
+      "",
       []
     ],
     [
       "r_dht:2",
       "dht:SDA",
-      "green",
-      []
+      "blue",
+      [
+        "h21.2",
+        "v69.35",
+        "h-145.5"
+      ]
     ],
     [
       "pump:COM",
       "esp:3V3",
-      "red",
+      "",
       []
     ],
     [
       "pump:NO",
       "pump_load_r:1",
-      "orange",
-      []
+      "green",
+      [
+        "h35",
+        "v25.65"
+      ]
     ],
     [
       "pump_load_r:2",
       "pump_load:A",
-      "orange",
-      []
+      "green",
+      [
+        "h6.2"
+      ]
     ],
     [
       "pump_load:C",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "valve:COM",
       "esp:3V3",
-      "red",
+      "",
       []
     ],
     [
       "valve:NO",
       "valve_load_r:1",
-      "orange",
-      []
+      "green",
+      [
+        "h35",
+        "v25.65"
+      ]
     ],
     [
       "valve_load_r:2",
       "valve_load:A",
-      "orange",
-      []
+      "green",
+      [
+        "h6.2"
+      ]
     ],
     [
       "valve_load:C",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "ldr:VCC",
       "esp:3V3",
-      "red",
+      "",
       []
     ],
     [
       "ldr:GND",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "ldr:AO",
       "esp:D32",
-      "purple",
-      []
+      "orange",
+      [
+        "h98",
+        "v16.7"
+      ]
     ],
     [
       "door:V+",
       "esp:VIN",
-      "red",
+      "",
       []
     ],
     [
       "door:GND",
       "esp:GND.1",
-      "black",
+      "",
       []
     ],
     [
       "door:PWM",
       "esp:D33",
-      "purple",
-      []
+      "green",
+      [
+        "h-280",
+        "v-417.3"
+      ]
     ]
   ]
 }
