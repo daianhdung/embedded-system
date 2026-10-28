@@ -69,3 +69,25 @@ def predict(frame_bgr):
     if _detector is None:
         _detector = YoloDetector()
     return _detector.observe(frame_bgr).prediction
+
+
+def transport_prediction(observation):
+    """Connectivity diagnostic: preserve real confidence; ESP applies its gate.
+
+    Eligible fire/smoke retains priority. With no eligible result, forward a
+    visible low-confidence detection. None/stale never becomes normal.
+    Low confidence has AI level 0 under the EXISTING firmware contract.
+    """
+    if observation.status == 'STALE':
+        return None
+    if observation.prediction is not None:
+        return observation.prediction
+    return detection_result(observation.detections, threshold=0.25)
+
+
+def predict_raw(frame_bgr):
+    """Opt-in diagnostic plugin; may send below-threshold observations to ESP."""
+    global _detector
+    if _detector is None:
+        _detector = YoloDetector()
+    return transport_prediction(_detector.observe(frame_bgr))

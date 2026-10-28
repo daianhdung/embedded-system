@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 import unittest
 from unittest.mock import patch
+from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 import yolo_plugin
@@ -37,6 +38,32 @@ class ObservationGateTests(unittest.TestCase):
                 assess([dict(label='fire', confidence=confidence)])
         for timing in [-1, float('nan')]:
             with self.assertRaises(ValueError): assess([], inference_ms=timing)
+
+    def test_raw_diagnostic_preserves_low_score_without_creating_normal(self):
+        obs=SimpleNamespace(status='BELOW_THRESHOLD',prediction=None,
+                            detections=[dict(label='smoke',confidence=.36)])
+        result=yolo_plugin.transport_prediction(obs)
+        self.assertEqual(result.label,'khoi')
+        self.assertEqual(result.confidence,.36)
+        self.assertIsNone(yolo_plugin.transport_prediction(
+            SimpleNamespace(status='NO_DETECTION',prediction=None,detections=[])))
+
+    def test_raw_diagnostic_keeps_eligible_smoke_over_ineligible_fire(self):
+        from ai_adapter import Prediction
+        eligible=Prediction('khoi',.91)
+        obs=SimpleNamespace(status='ABOVE_THRESHOLD',prediction=eligible,
+                            detections=[dict(label='fire',confidence=.4),dict(label='smoke',confidence=.91)])
+        self.assertEqual(yolo_plugin.transport_prediction(obs),eligible)
+        obs.status='STALE'
+        self.assertIsNone(yolo_plugin.transport_prediction(obs))
+
+    def test_raw_plugin_uses_same_detector_without_loading_twice(self):
+        with patch.object(yolo_plugin,'_detector',None), patch.object(yolo_plugin,'YoloDetector') as factory:
+            factory.return_value.observe.return_value=SimpleNamespace(status='BELOW_THRESHOLD',prediction=None,
+                detections=[dict(label='fire',confidence=.426)])
+            self.assertEqual(yolo_plugin.predict_raw(object()).confidence,.426)
+            self.assertEqual(yolo_plugin.predict_raw(object()).label,'lua')
+            factory.assert_called_once_with()
 
     def test_plugin_loads_once_and_preserves_unknown(self):
         with patch.object(yolo_plugin, '_detector', None), patch.object(yolo_plugin, 'YoloDetector') as detector:

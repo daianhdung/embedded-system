@@ -118,7 +118,9 @@ def main():
                 packet=result.packet(mapping['ts_ms'] if mapping else captured)
                 if transport: transport.publish(json.dumps(packet,separators=(',',':'),allow_nan=False))
                 last_ts=captured
-                emit('DRY_RUN' if a.dry_run else 'PUBACK',packet=packet, clock_mapping=mapping)
+                emit('DRY_RUN' if a.dry_run else 'PUBACK',packet=packet, clock_mapping=mapping,
+                     firmware_confidence_threshold_hint=0.8,
+                     meets_confidence_threshold=packet['do_tin_cay']>=0.8)
             time.sleep(a.interval)
         emit('STOP',reason='source ended or duration reached; no normal fallback')
     except KeyboardInterrupt: emit('STOP',reason='operator')

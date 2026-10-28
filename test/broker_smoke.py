@@ -93,11 +93,13 @@ async def main():
                                clock_synced=True,ts_ms=fake_epoch+int((time.monotonic()-fake_start)*250))
                 sub.publish('ptit/nhom07/s6-local-test/device/esp32-01/telemetry',json.dumps(telemetry))
                 await asyncio.sleep(.1)
+        low_source=folder/'low-confidence.jsonl'
+        low_source.write_text('{"label":"khoi","confidence":0.36}\nnull\n{"label":"binh_thuong","confidence":0.95}\n')
         ticker=asyncio.create_task(slow_device_clock())
         try:
             before_mapped=len(received)
             mapped=await asyncio.create_subprocess_exec(sys.executable,'tools/ai_publish.py',
-                '--input',str(source),'--host','127.0.0.1','--port',str(port),
+                '--input',str(low_source),'--host','127.0.0.1','--port',str(port),
                 '--prefix','ptit/nhom07/s6-local-test','--interval','0.1',
                 '--wokwi-clock','--expected-firmware-id','FAKE_DEVICE_TEST',
                 stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.STDOUT)
@@ -106,6 +108,8 @@ async def main():
             records=[json.loads(line) for line in output.decode().splitlines()]
             published=[row for row in records if row['event']=='PUBACK']
             assert len(published)==2,records
+            assert published[0]['packet']['do_tin_cay']==0.36
+            assert published[0]['meets_confidence_threshold'] is False
             assert len(received)-before_mapped==2
             assert sum(row['event']=='UNAVAILABLE' for row in records)==1
             assert all(row['clock_mapping']['timestamp_domain']=='WOKWI_SIMULATED_UTC' for row in published)

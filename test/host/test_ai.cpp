@@ -83,6 +83,20 @@ void slowSimulationClock() {
   assert(accept(tracker,packet("lua","0.94",epoch),epoch+15000)==AiReject::Timestamp);
   std::puts("PASS slow-simulation mapping: raw +98s rejected; mapped sequence accepted; replay and TTL unchanged");
 }
+void lowConfidenceTransport() {
+  AiTracker tracker;
+  assert(accept(tracker,packet("khoi","0.36"))==AiReject::None);
+  assert(tracker.signal().received && tracker.signal().level==0);
+  assert(tracker.signal().confidence==0.36);
+  SafetyController control;
+  auto sample=healthy(100);
+  control.update(sample,100,tracker.signal());
+  assert(control.snapshot().state==SystemState::NORMAL && !control.snapshot().pumpOn);
+  sample.smokeAdc=3000;
+  control.update(sample,100,tracker.signal());
+  assert(control.snapshot().localLevel==2 && control.snapshot().pumpOn);
+  std::puts("PASS low-confidence observation accepted at original score; AI level0; local danger remains effective");
+}
 void telemetryJson() {
   SensorSnapshot sensors; SafetySnapshot safety; NetworkSnapshot net;
   char buffer[2048];
@@ -144,4 +158,4 @@ void fusion() {
   std::puts("PASS AI/local max fusion, source masks, expiry/disconnect, recovery/ACK, sustained AI timeout lock");
 }
 }
-int main() { parserCases(); slowSimulationClock(); fusion(); telemetryJson(); }
+int main() { parserCases(); slowSimulationClock(); lowConfidenceTransport(); fusion(); telemetryJson(); }
