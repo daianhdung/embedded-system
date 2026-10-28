@@ -1,0 +1,19 @@
+LOCAL R5 — user-provided Wokwi log, 27/10/2026
+This file is a curated excerpt and summary of the log pasted by the user, not a complete raw capture or agent-run simulation.
+
+Verified excerpts:
+=== LOCAL R5: LDR + SERVO + DHT HOLD | PHASE 2 ===
+[EVENT 1.70 s] NORMAL -> FIRE_SUPPRESSION
+  Ly do: LOCAL_DANGER | Nguon: LOCAL | Kich hoat: SMOKE_DANGER
+
+Snapshot summary:
+time_s,state,smoke_adc,ldr_adc,flame,dht_attempts,dht_errors,temperature_c,humidity_pct,pump_command,valve_command,door_angle_command
+1.70,FIRE_SUPPRESSION,3628,2045,0,0,0,WAIT,WAIT,ON,ON,90
+2.70,FIRE_SUPPRESSION,3628,2045,0,0,0,WAIT,WAIT,ON,ON,90
+3.70,FIRE_SUPPRESSION,3628,2045,0,1,0,28.0,45.0,ON,ON,90
+4.70,FIRE_SUPPRESSION,3628,2045,0,1,0,28.0,45.0,ON,ON,90
+5.70,FIRE_SUPPRESSION,3628,2045,0,1,0,28.0,45.0,ON,ON,90
+
+Observed: R5 firmware boot; MQ above danger threshold2800; mask3=smoke warning bit1 + smoke danger bit2; LDR baseline2045, no simulated flame; DHT first successful sample, zero read errors; output commands match FIRE.
+Not verified: actual servo movement, relay COM-NO loads, buzzer sound, ADC response to changed MQ/LDR input, NORMAL/RECOVERY/ACK, full60s timeout, thermal fault hold. First DHT rate remains unavailable until two valid samples; not a read error.
+Next: lower MQ until ADC<1700 with LDR>=750 and DHT28/45; expect RECOVERY, outputs off, door remains open. After3s safe, release then press ACK>0.1s; expect NORMAL and closed door. Capture input/log plus visual load and servo evidence.

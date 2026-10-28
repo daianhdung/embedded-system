@@ -1,0 +1,14 @@
+{
+  "version": "LOCAL R5 LOG3S AUDIO DIAG",
+  "date": "2026-10-28",
+  "runtime": "AWAITING_USER",
+  "sha256": {
+    "include/outputs.h": "a1290d1edcc4a6ac0057df92fe962ea10ae1d0c18c935052ac099439e0118020",
+    "src/outputs.cpp": "fa597589cc299e043da19991c6bf65095805096ddce51443a1d7e1231e84e364",
+    "src/telemetry.cpp": "8228641c8be220fa04e7cfe43a248202def9fa452b08e263b128e424ce13a4ad",
+    "include/config.h": "b6a1a685cf0aa363804845511d725cf65194be21d0967e1c7074b4c0d5f01e9c",
+    "diagram.json": "745701a6453dca0eecb4e32306b14f64e7ff913f8d0e443d0d855a53dadbe1d5",
+    ".pio/build/esp32dev/firmware.bin": "4e793b201b4c2f5ba252cdc13adc0a46f9fa09e03be8547409a00112276cc6df",
+    ".pio/build/esp32dev/firmware.elf": "8a0b8825581cf415a9b9c06152bc34175f2033364e1cafe713445aa79238589b"
+  }
+}

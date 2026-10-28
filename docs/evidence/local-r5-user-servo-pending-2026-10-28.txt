@@ -1,0 +1,8 @@
+LOCAL R5 — 28/10/2026 — direct user report during LDR test.
+User: two yellow BOM/VAN LEDs lit, but no servo-door motion noticed.
+Confirmed: relay load LED response visually observed by user after prior LDR ADC<500 and audible buzzer report.
+Unresolved: servo motion. Current event/state/door command not pasted for this attempt; do not assume actuator failure or successful opening.
+Read-only inspection: diagram door:PWM->esp:D33, door:V+->esp:VIN, door:GND->esp:GND.1. Driver LEDC8/group1 50Hz16bit, calculated closed/open duty1638/4915, cached command rewritten on angle change. Buzzer uses group0. This inspection does not prove physical pin waveform or servo motion in Wokwi.
+Diagnostic next: capture NORMAL/DONG0 then FIRE/MO90 in same run, visually compare rotating horn (not fixed servo body). If command0->90 changes but horn unchanged, inspect PWM configuration/actual signal using diagnostic readback or logic analyzer before declaring fix. No source change in this diagnostic turn.
+
+Follow-up user log:3522.81/3523.81/3524.81s all RECOVERY,local0,NONE,latched LOCAL/FLAME; MQ1675,LDR2045,no flame; T28/H45/rate0,DHT1171attempts/0errors; loads/buzzer OFF,red ON; door command OPEN90; timeout lock false; ackReady true,ACK released. This confirms the designed held-open recovery command, not servo feedback and not a before/after0-to90 pair. Next new safe ACK should produce NORMAL/CLOSED0; visual motion still pending.

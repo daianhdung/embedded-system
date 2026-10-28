@@ -1,0 +1,4 @@
+LOCAL R5 — user confirmation on28/10/2026
+User directly reports: "OK Tôi đã đóng dược của. Giờ commit code cho tôi đi (git của firmware)".
+This confirms the user could close the simulated door after the preceding safe-input/ACK instructions. Previous user report also confirmed audible buzzer after volume diagnostic update. No new numeric angle, PWM readback, screenshot, full open-close test sequence or timestamp was supplied in this message.
+Record closing motion as user-confirmed; do not infer complete S5 or260integration runs pass.

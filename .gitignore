@@ -3,3 +3,9 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+# Kết quả build kiểm thử C++ trên máy
+.host-build/
+.DS_Store
+include/secrets.h
+.env

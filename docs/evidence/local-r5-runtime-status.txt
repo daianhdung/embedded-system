@@ -1,0 +1,6 @@
+LOCAL R5 — 27/10/2026
+Build and host tests passed. Wokwi MCU runtime NOT CONFIRMED.
+Attempt: cua.getApp("Visual Studio Code") returned "Sky Computer Use request timed out" after about78s. No simulator interaction, screenshot, servo waveform or relay runtime observation was obtained. wokwi-cli is not installed.
+Follow docs/phase2-testing.md and record input/output evidence. All 260 final integration runs remain NOT_RUN.
+
+Update from user-pasted log: MCU R5 boot and FIRE commands from smoke3628 confirmed; first DHT28/45 valid, zero errors; LDR2045 baseline. See local-r5-user-boot.txt. Agent UI still unavailable; physical/visual output and full S5 NOT CONFIRMED.

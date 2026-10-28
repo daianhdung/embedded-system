@@ -1,0 +1,5 @@
+LOCAL R5 — 28/10/2026 — summary of two user-pasted snapshots, not full raw capture.
+522.84s: NORMAL,level0,NONE,mask0,latched NONE/NONE; MQ1675,LDR2683,valid,no flame; LDRage97ms; ACK released; T28.0C,H45.0%,rate0; DHT173attempts/0errors,age2.04s; pump/valve OFF; door command CLOSED0deg; buzzer/red OFF.
+523.84s: same state/input/output commands; DHT174attempts/0errors,age0.03s.
+Prior user snapshots506.83/507.83s were RECOVERY with ackReady=true and timeout lock. These later snapshots show return to NORMAL and cleared reason latch following the ACK instruction. No transition EVENT ACK_SAFE or lock field was included, so exact ACK timing, debounce and lock clearing are not directly captured. No visual servo movement was confirmed in this message.
+Next: keep MQ1675 and DHT28/45 fixed. Increase LDR illumination until ADC<=500; expect local FLAME/FIRE, relay and door-open commands. Observe servo/load LEDs, collect event and snapshots. Do not mark fullTC13 or20runs passed based on these two snapshots.

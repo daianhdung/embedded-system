@@ -1,0 +1,9 @@
+PASS wiring: official ESP/MQ2 pins, ADC1, GPIO mapping, DHT pull-up and relay COM-NO loads
+PASS thresholds and smoke hysteresis at exact boundaries
+PASS independent flame, temperature, rise and smoke danger rules
+PASS startup grace, invalid/stale sensor warning, local danger with failed DHT
+PASS RECOVERY latch, bounce, safe delay, held button and fresh ACK
+PASS 60s boundary, long persistent danger lockout and manual re-arm
+PASS new fire after early stop and millis rollover at suppression timeout
+PASS held-at-boot ACK, simultaneous sources and sensor fault blocking ACK
+PASS output/state invariants over 20000 deterministic synthetic steps

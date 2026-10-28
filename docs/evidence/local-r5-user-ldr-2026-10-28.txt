@@ -1,0 +1,6 @@
+LOCAL R5 — 28/10/2026 — user reports, not agent-run or full serial capture.
+User earlier reported263lux with LDR ADC1378, state NORMAL, smoke1675, T28/H45/rate0.
+After increasing illumination further, user reports LDR ADC<500/4095 and audible buzzer ("pipppp"). Exact high-lux value, exact ADC, transition event/reason, two relay load LEDs and actual servo motion were not supplied.
+Confirmed from report: illumination increase produced lower ADC across the configured threshold, audible alarm output occurred.
+Still pending: serial FIRE_SUPPRESSION/FLAME confirmation with other inputs at baseline; both COM-NO load LEDs on; door movement to open; lowering illumination returns RECOVERY while door remains open; fresh safe ACK closes door/NORMAL.
+Do not count as full LDR/servo test pass or20integration runs.

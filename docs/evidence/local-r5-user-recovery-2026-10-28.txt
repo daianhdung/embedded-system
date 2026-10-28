@@ -1,0 +1,15 @@
+LOCAL R5 — user-provided log excerpt summary, 28/10/2026
+Source: two snapshots pasted in chat; this is a curated summary, not a complete raw capture.
+
+Snapshots at506.83s and507.83s:
+state=RECOVERY; local_level=0; active_reason=NONE; active_mask=0
+latched_source=LOCAL; primary_latched_reason=FLAME
+smoke_adc=1675; ldr_adc=2683; ldr_valid=true; simulated_flame=false; ldr_age_ms=33
+ack_raw=released; temperature_c=28.0; humidity_pct=45.0; rate_c_s=0
+DHT attempts=168; errors=0; ages_s=1.07 and2.07
+pump_command=OFF; valve_command=OFF; door_command=OPEN90deg
+buzzer_command=OFF; red_command=ON; suppression_locked=true; ack_ready=true
+
+Interpretation: inputs currently safe and RECOVERY latch correctly awaits new ACK; timeout lock is set but the two snapshots do not measure the actual60s cutoff; FLAME is the remembered cause, not current flame detection.
+Not yet verified: new ACK transition to NORMAL, close-door movement, live input/threshold sweep, exact timeout duration, hardware feedback. User image from earlier is separate evidence; these snapshots alone contain output commands only.
+Next: keep inputs safe, release then press ACK for~0.2s; expect event ACK_SAFE and NORMAL, lock cleared, loads/buzzer off, door command0deg, red off/green on; ask user to visually confirm door and load LEDs.

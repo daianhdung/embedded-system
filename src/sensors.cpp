@@ -1,21 +1,25 @@
 #include "sensors.h"
+#include <Arduino.h>
 #include <DHT.h>
 #include "config.h"
 #include "sample_timing.h"
+#include "ldr_detector.h"
 
 namespace {
 DHT dht(Config::kDhtPin, DHT22);
 SensorSnapshot snapshot;
 TemperatureHistory temperatureHistory;
+LdrDetector ldrDetector;
 uint32_t lastDhtAttemptMs = 0;
 }
 
 void beginSensors() {
   pinMode(Config::kSmokePin, INPUT);
-  pinMode(Config::kFlamePin, INPUT_PULLUP);
+  pinMode(Config::kLdrPin, INPUT);
   pinMode(Config::kAckPin, INPUT_PULLUP);
   analogReadResolution(12);
   analogSetPinAttenuation(Config::kSmokePin, ADC_11db);
+  analogSetPinAttenuation(Config::kLdrPin, ADC_11db);
   // Thích nghi DHT22 từ do_an_iot/src/main.cpp của nhóm (Giang Lê).
   // R4 trở về Adafruit sau khi DHTesp liên tục TIMEOUT trong test Wokwi.
   dht.begin();
@@ -25,12 +29,23 @@ void beginSensors() {
 }
 
 void sampleFastSensors(uint32_t now) {
-  // Chỉ ghi ADC mô phỏng, chưa quy đổi ppm hay dùng luật báo cháy.
+  // ADC mô phỏng cho luật khói, chưa quy đổi ppm.
   snapshot.smokeAdc = analogRead(Config::kSmokePin);
-  snapshot.flameDetected = digitalRead(Config::kFlamePin) == Config::kFlameActiveLevel;
-  snapshot.ackPressedRaw = digitalRead(Config::kAckPin) == LOW;
+  sampleControlInputs();
   snapshot.fastSampleMs = now;
   snapshot.fastValid = true;
+}
+
+// ACK đọc nhanh riêng; MQ1 s, LDR100 ms.
+void sampleControlInputs() {
+  snapshot.ackPressedRaw = digitalRead(Config::kAckPin) == LOW;
+}
+
+void sampleLdrSensor(uint32_t now) {
+  snapshot.ldrAdc = analogRead(Config::kLdrPin);
+  snapshot.ldrValid = snapshot.ldrAdc >= 0 && snapshot.ldrAdc <= 4095;
+  snapshot.ldrSampleMs = now;
+  snapshot.flameDetected = ldrDetector.update(snapshot.ldrAdc, snapshot.ldrValid);
 }
 
 void pollDhtSensor(uint32_t now) {

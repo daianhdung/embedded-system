@@ -1,0 +1,9 @@
+{
+  "source": "https://raw.githubusercontent.com/wokwi/wokwi-elements/main/src/gas-sensor-element.ts",
+  "pins": [
+    "AOUT",
+    "DOUT",
+    "GND",
+    "VCC"
+  ]
+}

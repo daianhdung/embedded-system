@@ -1,0 +1,30 @@
+{
+  "version": "LOCAL R5",
+  "date": "2026-10-27",
+  "runtime": "NOT_CONFIRMED",
+  "sha256": {
+    ".pio/build/esp32dev/firmware.bin": "8224f3e81cde497a34dbdb4d4bc12a35cee281b78d7352592b647d1ac413856a",
+    ".pio/build/esp32dev/firmware.elf": "07461980ce4119ad8a0679f3bb35ecdb50d98c74b2a1d8e6afa881bb6cca73e5",
+    "diagram.json": "6538f1e71cab4c1066bc85b361bd9fa353ece1993804a58525b18f211e0191eb",
+    "include/config.h": "543e352ccedaced8c3ce3a22802879f4e4e1e4e50dd4e8be5f68316f66dfc53e",
+    "include/display.h": "255f0f6ea8287c7c96792f88f8aebeb0895d60f33f1238955ec1b08507686501",
+    "include/ldr_detector.h": "e292250b3e5120726e71aab9bbda0b8cb2f46e6f55806d0ecb1c0a350e31740a",
+    "include/outputs.h": "31c38e75d179ea0c5bc77b8c170cdaef3eb872f47c260b5aa1f65a6a0aa3c1c3",
+    "include/safety.h": "94cfdc70534dad0b48a4b7b9fb451f4b99425f26593682bff00635cf98acee34",
+    "include/sample_timing.h": "308f707688bb25101941d8b7e235beecc23846bddd3d6bd78ac407720b2d315b",
+    "include/sensors.h": "8e5543896a8cbcff1c6305b2482caa336efb49b19ec85636412a0e7f74dd8693",
+    "include/servo_signal.h": "e51d255d37f27b7116deb7347abc2f527391b1b9be8fb502b70953a09f67f41e",
+    "include/telemetry.h": "64f8f318c7ef40727b6b09a01cbafe74724c64d4e931433fa6381111f644f8ec",
+    "platformio.ini": "b9616c2743f34041b1a7ae3a920ebd41f243f93a3f48712458f224b25abcd516",
+    "src/display.cpp": "d9eaf17b4fa2b912d8c98f847ec4d3734d814e17dccdb4fdc9901eb909f05008",
+    "src/main.cpp": "2ecf594dccb73def204be77bfe6e2b6e59baa0274ea00c148ef561b8f4daa397",
+    "src/outputs.cpp": "bed2fe841e75c7bdbb7e39893c5c9f236110b59dc023598e6715abe61e61ec63",
+    "src/safety.cpp": "de35a06d0dade83d029337616394146ef002f656b98e4ddbdcff4eb5e7ec6292",
+    "src/sensors.cpp": "eab0d7d8caba2b080878ef1e48e38d7ca9d17dedc15686d192adc3766af63f1b",
+    "src/telemetry.cpp": "645a2ac6f52ecbf0184076af66abf58a6a58157bb574d25b01da3d373ac1501b",
+    "test/host/test_safety.cpp": "d9f56643a5b3b34fb7d1bbe26439c3476cb4324865f52969b61ed537ee3e159b",
+    "test/run_host_tests.py": "27ea56903718ea83b29ca61407c7f83d3c08727f7597dd834967fa7072f4f142",
+    "test/verify_wiring.py": "daf655cf6d85410366a6a2e188f7cf76c9d7f3a92563ef43815e2df9e44db632",
+    "wokwi.toml": "33554a90ae5ecf15e34ab55ba0424d01efe313b9d8ce5bebc9025d139197c313"
+  }
+}

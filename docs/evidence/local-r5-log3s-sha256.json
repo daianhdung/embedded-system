@@ -1,0 +1,11 @@
+{
+  "version": "LOCAL R5 LOG3S",
+  "date": "2026-10-28",
+  "runtime": "AWAITING_USER_RESTART",
+  "sha256": {
+    "include/config.h": "b6a1a685cf0aa363804845511d725cf65194be21d0967e1c7074b4c0d5f01e9c",
+    "src/telemetry.cpp": "f16580b258973ca786bbedc8e96b385ee69a1b781e03f147044e531ac572aba8",
+    ".pio/build/esp32dev/firmware.bin": "2d5b79794a9baa3ad676f6dbbe804398ea82928af5e976433001a8413f5db135",
+    ".pio/build/esp32dev/firmware.elf": "f312abec4c8113cba56502e5b29767a38c9d6c20ce19323f24e30a701773bdd7"
+  }
+}

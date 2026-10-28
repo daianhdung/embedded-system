@@ -31,23 +31,12 @@
     },
     {
       "type": "wokwi-pushbutton",
-      "id": "flame",
-      "top": 100,
-      "left": -210,
-      "attrs": {
-        "color": "red",
-        "label": "FLAME SIM R3",
-        "bounce": "0"
-      }
-    },
-    {
-      "type": "wokwi-pushbutton",
       "id": "ack",
       "top": 210,
       "left": -210,
       "attrs": {
         "color": "blue",
-        "label": "ACK RAW R3"
+        "label": "ACK LOCAL R5"
       }
     },
     {
@@ -65,14 +54,18 @@
       "id": "pump",
       "top": 160,
       "left": 340,
-      "attrs": {}
+      "attrs": {
+        "transistor": "npn"
+      }
     },
     {
       "type": "wokwi-relay-module",
       "id": "valve",
       "top": 160,
       "left": 510,
-      "attrs": {}
+      "attrs": {
+        "transistor": "npn"
+      }
     },
     {
       "type": "wokwi-buzzer",
@@ -80,7 +73,7 @@
       "top": 290,
       "left": 190,
       "attrs": {
-        "volume": "0.1"
+        "volume": "0.5"
       }
     },
     {
@@ -126,6 +119,80 @@
       "left": 220,
       "attrs": {
         "value": "10000"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "pump_load",
+      "top": 480,
+      "left": 340,
+      "attrs": {
+        "color": "orange",
+        "label": "BOM"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "pump_load_r",
+      "top": 550,
+      "left": 340,
+      "attrs": {
+        "value": "330"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "valve_load",
+      "top": 480,
+      "left": 510,
+      "attrs": {
+        "color": "orange",
+        "label": "VAN"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "valve_load_r",
+      "top": 550,
+      "left": 510,
+      "attrs": {
+        "value": "330"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr",
+      "top": 70,
+      "left": -240,
+      "attrs": {
+        "lux": "100",
+        "rl10": "50",
+        "gamma": "0.7"
+      }
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "door",
+      "top": 300,
+      "left": -200,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_ldr",
+      "top": 40,
+      "left": -240,
+      "attrs": {
+        "text": "LDR DEMO: sang tang -> ADC giam"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "label_door",
+      "top": 400,
+      "left": -210,
+      "attrs": {
+        "text": "CUA: 0 dong / 90 mo (lenh)"
       }
     }
   ],
@@ -209,21 +276,9 @@
       []
     ],
     [
-      "gas:AO",
+      "gas:AOUT",
       "esp:D35",
       "orange",
-      []
-    ],
-    [
-      "flame:1.l",
-      "esp:D18",
-      "green",
-      []
-    ],
-    [
-      "flame:2.l",
-      "esp:GND.1",
-      "black",
       []
     ],
     [
@@ -320,6 +375,90 @@
       "r_dht:2",
       "dht:SDA",
       "green",
+      []
+    ],
+    [
+      "pump:COM",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "pump:NO",
+      "pump_load_r:1",
+      "orange",
+      []
+    ],
+    [
+      "pump_load_r:2",
+      "pump_load:A",
+      "orange",
+      []
+    ],
+    [
+      "pump_load:C",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "valve:COM",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "valve:NO",
+      "valve_load_r:1",
+      "orange",
+      []
+    ],
+    [
+      "valve_load_r:2",
+      "valve_load:A",
+      "orange",
+      []
+    ],
+    [
+      "valve_load:C",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "ldr:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "ldr:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "ldr:AO",
+      "esp:D32",
+      "purple",
+      []
+    ],
+    [
+      "door:V+",
+      "esp:VIN",
+      "red",
+      []
+    ],
+    [
+      "door:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "door:PWM",
+      "esp:D33",
+      "purple",
       []
     ]
   ]

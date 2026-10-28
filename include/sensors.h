@@ -1,8 +1,12 @@
 #pragma once
-#include <Arduino.h>
+#include <cstdint>
+#include <cmath>
 
 struct SensorSnapshot {
   int smokeAdc = 0;
+  int ldrAdc = 0;
+  bool ldrValid = false;
+  uint32_t ldrSampleMs = 0;
   bool flameDetected = false;
   bool ackPressedRaw = false;
   bool fastValid = false;
@@ -23,5 +27,7 @@ struct SensorSnapshot {
 
 void beginSensors();
 void sampleFastSensors(uint32_t now);
+void sampleControlInputs();
+void sampleLdrSensor(uint32_t now);
 void pollDhtSensor(uint32_t now);
 const SensorSnapshot& sensorSnapshot();
