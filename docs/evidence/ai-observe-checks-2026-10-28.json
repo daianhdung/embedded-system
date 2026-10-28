@@ -1,0 +1,41 @@
+{
+  "domain": "LOCAL_AI_OBSERVER_SOFTWARE_CHECKS_NOT_ACCEPTANCE",
+  "date": "2026-10-28",
+  "weights_sha256": "b91633799ceb052c814b4f8b77a37efc9a40f002d528df97d74463585fa4f28f",
+  "python_tests": {
+    "status": "PASS",
+    "count": 18,
+    "new_gate_plugin_tests": 7
+  },
+  "headless_checks": [
+    {
+      "input_kind": "local_image",
+      "status": "PASS",
+      "frames": 1,
+      "mqtt_enabled": false,
+      "note": "CLI/headless exercise only; not a model accuracy metric."
+    },
+    {
+      "input_kind": "generated_three_frame_video",
+      "status": "PASS",
+      "frames": 3,
+      "mqtt_enabled": false,
+      "note": "CLI/headless exercise only; not a model accuracy metric."
+    }
+  ],
+  "camera_gui": "NOT_RUN_BY_AGENT",
+  "snapshot_hotkey": "NOT_RUN_BY_AGENT",
+  "model_accuracy": "NOT_EVALUATED",
+  "temporal_filter": "NOT_IMPLEMENTED",
+  "mqtt_integration": "NOT_RUN",
+  "firmware_changed": false,
+  "formal_ledger_unchanged": true,
+  "raw_logs": "Local runs/ only; user images/video not copied into repository",
+  "source_sha256": {
+    "tools/yolo_plugin.py": "69e80b60d01ee8db0745e021bba5f12e24c17444322caaeccc3a0283ce33eb67",
+    "tools/ai_observe.py": "365b2e7a772b02ac83337c7fd839ee2c2849866df5c75181387f83af05d7e2c6",
+    "tools/requirements-ai.txt": "1c94383aa3cccaa40348d1c7681d3d9ccfa71cd49cb0ac00453069dc77d748cb",
+    "test/test_ai_observe.py": "e68be893ad65719de1f4ca19c1068aacd2adf39f5d5a0b3af0972b0d6756dddc",
+    "models/fire-smoke-yolov8n.manifest.json": "4376f4d8efbbf21d9ab928ebeea51ea09d9282d8c6daa3394db3bdc3357b4369"
+  }
+}

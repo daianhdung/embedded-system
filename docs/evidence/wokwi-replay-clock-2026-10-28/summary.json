@@ -1,0 +1,68 @@
+{
+  "domain": "USER_WOKWI_REPLAY_FUNCTIONAL_TRACE_NOT_FORMAL_ACCEPTANCE",
+  "date": "2026-10-28",
+  "firmware_ids": [
+    "R7-ff4ea6a0f5395c1c"
+  ],
+  "boot_ids": [
+    "a475d28744300a80"
+  ],
+  "clock_domain": "WOKWI_SIMULATED_UTC",
+  "backend": "REPLAY_MOCK",
+  "publisher_ack_count": 4,
+  "publisher_unknown_count": 1,
+  "accepted_before": 0,
+  "accepted_after": 4,
+  "rejected_before": 4,
+  "rejected_after": 4,
+  "events": [
+    {
+      "uptime_ms": 2646336,
+      "state": "WARNING",
+      "transition_reason": "AI_WARNING",
+      "source": "AI",
+      "local_level": 0,
+      "ai_level": 1,
+      "pump_cmd": false,
+      "valve_cmd": false,
+      "door_open_cmd": false,
+      "buzzer_cmd": true
+    },
+    {
+      "uptime_ms": 2649458,
+      "state": "FIRE_SUPPRESSION",
+      "transition_reason": "AI_DANGER",
+      "source": "AI",
+      "local_level": 0,
+      "ai_level": 2,
+      "pump_cmd": true,
+      "valve_cmd": true,
+      "door_open_cmd": true,
+      "buzzer_cmd": true
+    },
+    {
+      "uptime_ms": 2655294,
+      "state": "RECOVERY",
+      "transition_reason": "DANGER_CLEARED",
+      "source": "NONE",
+      "local_level": 0,
+      "ai_level": 0,
+      "pump_cmd": false,
+      "valve_cmd": false,
+      "door_open_cmd": true,
+      "buzzer_cmd": false
+    }
+  ],
+  "capture_complete_at_copy": false,
+  "limitations": [
+    "Command telemetry only; mechanical motion/audio not independently observed",
+    "Replay only; no real model output",
+    "Post-replay ACK not shown",
+    "No formal acceptance entry updated",
+    "ESP TTL uses simulated seconds"
+  ],
+  "sha256": {
+    "capture.jsonl": "8d9fd9308a57444cde085709bc73b9f24de2ebb9679d9f10c53347748e148ea8",
+    "publisher.jsonl": "036ac52d91f98d8fd42438816ea78ce6284c091edadda2d824a38de5307cd746"
+  }
+}

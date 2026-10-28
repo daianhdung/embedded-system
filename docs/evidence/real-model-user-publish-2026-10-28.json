@@ -1,0 +1,18 @@
+{
+  "domain": "USER_REAL_MODEL_PUBLISHER_LOG_NOT_ESP_ACCEPTANCE",
+  "date": "2026-10-28",
+  "model_id": "rabahdev-fire-smoke-yolov8n-13017fe8",
+  "user_action": "Held a fire image in front of camera; later confirmed testing finished",
+  "source_attachment_sha256": "de73f15e664f9c60e767ca94fd50218568ea6dee207edffc88d9fea78e6f525a",
+  "parsed_lines": 55,
+  "truncated_lines_skipped": 1,
+  "publisher_puback_count": 20,
+  "fire_packet_count": 9,
+  "fire_confidence_min": 0.4663183391094208,
+  "fire_confidence_max": 0.7525872588157654,
+  "all_fire_below_alarm_threshold": true,
+  "clock_domain": "WOKWI_SIMULATED_UTC",
+  "esp_acceptance_for_this_window": "NOT_PROVIDED",
+  "model_metrics": "NOT_EVALUATED",
+  "formal_acceptance_updated": false
+}

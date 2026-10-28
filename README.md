@@ -1,6 +1,6 @@
 # Firmware PCCC Nhóm07 — S7/S8 R7
 
-**Đã có phần mềm tích hợp và công cụ kiểm thử tới S8, dùng mock; model thật thay sau theo yêu cầu.** S5 hoãn. S8 chưa hoàn tất nghiệm thu260lượt. [Tiến độ và checklist duy nhất](docs/KB.md#progress) · [Hướng dẫn hiện tại S7–S8](docs/s7-s8-guide.md) · [Contract MQTT S6](docs/reference/s6-mqtt-contract.md).
+**Đã có phần mềm tích hợp và công cụ kiểm thử tới S8 bằng mock. Model YOLOv8n đã chạy thử local ở chế độ quan sát, chưa nghiệm thu với ESP32.** S5 hoãn. S8 chưa hoàn tất nghiệm thu260lượt. [Tiến độ và checklist duy nhất](docs/KB.md#progress) · [Hướng dẫn hiện tại S7–S8](docs/s7-s8-guide.md) · [Contract MQTT S6](docs/reference/s6-mqtt-contract.md).
 
 ## Bắt đầu tại đây
 
@@ -28,7 +28,19 @@ Máy khác dùng `pio run` khi PlatformIO có trong PATH. Boot phải có `S7/S8
 
 Build/core/Python/scenarios được chạy và lưu report/log/hash trongruns/. Không chạy Wokwi hoặc model. Bộ host có240PASS/20DEFERRED là test logic bằng virtualmillis, không phải240lượt nghiệm thu Wokwi. [Báo cáo đã chạy](docs/evidence/s7s8-final-checks-2026-10-28/report.json).
 
+## Quan sát AI thật trên máy tính
+
+Model YOLOv8n lửa/khói đã nạp và người dùng đã thử ảnh/webcam; chưa đánh giá độc lập hoặc nghiệm thu tích hợp với ESP32. Chạy quan sát, không gửi MQTT:
+
+```sh
+.venv-ai/bin/python tools/ai_observe.py
+```
+
+Xem [cách đọc confidence, lưu ảnh và log báo giả](docs/ai-observation.md). Ngưỡng hiển thị 0,25, ngưỡng chọn 0,8; chưa lọc nhiều frame. Không phát hiện không tự kết luận an toàn.
+
 ## Thu log và thử replay
+
+Nếu Wokwi từ chối `TIMESTAMP`, dùng [chế độ đồng hồ mô phỏng](docs/wokwi-clock.md) thay các lệnh UTC mặc định bên dưới. Capture và publisher cần chạy đồng thời ở hai terminal.
 
 Môi trường .venv có Paho2.1.0; nếu chưa có, tạo venv rồi cài `tools/requirements-mqtt.txt`. Chờ log `WiFi/MQTT/Sub/UTC: 1/1/1/1`, terminalA:
 

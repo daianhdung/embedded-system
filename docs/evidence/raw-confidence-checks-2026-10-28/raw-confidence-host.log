@@ -1,0 +1,16 @@
+PASS wiring: DevKit V1/MQ2/LDR/servo pins, ADC1, 3V3 LDR, independent PWM, DHT and relay loads
+PASS thresholds and smoke hysteresis at exact boundaries
+PASS independent flame, temperature, rise and smoke danger rules
+PASS startup grace, invalid/stale sensor warning, local danger with failed DHT
+PASS RECOVERY latch, bounce, safe delay, held button and fresh ACK
+PASS 60s boundary, long persistent danger lockout and manual re-arm
+PASS new fire after early stop and millis rollover at suppression timeout
+PASS held-at-boot ACK, simultaneous sources and sensor fault blocking ACK
+PASS thermal high/rise survives failed/stale DHT, unknown recovery rate and timeout
+PASS LDR hysteresis/fault/independence, door warning/fire/recovery/timeout/ACK and servo pulse
+PASS output/state invariants over 20000 deterministic synthetic steps
+PASS strict AI schema, malformed/type/range/size/duplicate/trailing/NUL, retained, replay, clock, age, TTL/rollover
+PASS slow-simulation mapping: raw +98s rejected; mapped sequence accepted; replay and TTL unchanged
+PASS low-confidence observation accepted at original score; AI level0; local danger remains effective
+PASS AI/local max fusion, source masks, expiry/disconnect, recovery/ACK, sustained AI timeout lock
+PASS actual MQTT telemetry/event encoder, finite/null measurements, source/levels/status, buffer bound

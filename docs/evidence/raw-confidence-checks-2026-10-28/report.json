@@ -1,0 +1,27 @@
+{
+  "domain": "RAW_CONFIDENCE_TRANSPORT_SOFTWARE_NOT_ACCEPTANCE",
+  "python_tests": 29,
+  "host_core": "PASS_ASAN_UBSAN",
+  "localhost_broker": "PASS_PC_FIXTURE",
+  "checks": [
+    "raw plugin keeps smoke .36 unchanged",
+    "no box/stale stays unknown",
+    "eligible smoke not masked by low fire",
+    "firmware accepts .36 at AI level0; local danger remains active",
+    "actual local MQTT mapper sends .36 without increasing score"
+  ],
+  "firmware_changed": false,
+  "new_live_camera_to_esp_run": "NOT_RUN",
+  "raw_mode": "OPT_IN_DIAGNOSTIC; low-confidence messages mean AI level0 in existing firmware and can clear prior AI-only danger",
+  "source_sha256": {
+    "tools/yolo_plugin.py": "c6163b601fa5bfb837c00503765afda72466f91f31a31f1e0225fb1d561ef61d",
+    "tools/ai_publish.py": "8a6742b118d61ef1475de2dde24cd0b3511a0a1c94fcaf2e0fa2e38ff009c1e6",
+    "test/test_ai_observe.py": "0c557488090aa92b4a243ba8d34246c1ef1d0c576382ed66a06cccfe9cbbdd55",
+    "test/host/test_ai.cpp": "bbb9ac188470707d09cf00c9669630eef2e35c40a5c0f2845270f9d5142513cf",
+    "test/broker_smoke.py": "90ad4d0f0f0cf090c2d456be91e882f0768fefc5ca8990f7fd20eef60d447649"
+  },
+  "logs_sha256": {
+    "raw-confidence-host.log": "40e14c8d6f94f330601b12097c563af22ee63019ed3084d4aea8e2bb473a8adf",
+    "raw-confidence-broker.log": "6233d66320b457e0722a7992282b58d8eb6a509e8ceba8450f120b8299e2934c"
+  }
+}

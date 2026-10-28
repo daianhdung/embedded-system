@@ -1,0 +1,34 @@
+{
+  "domain": "USER_WOKWI_RUNTIME_DIAGNOSIS_NOT_ACCEPTANCE",
+  "date": "2026-10-28",
+  "capture_sha256": "cdbc76f8ad74db915f2615fb54f71dacc3a1560c04467e32ba9b4a13977908bf",
+  "capture_start": "2026-10-28T11:06:05.880261+00:00",
+  "capture_end": "2026-10-28T11:08:06.759218+00:00",
+  "replay_first_ts_ms": 1793185775656,
+  "replay_started_after_capture_end": true,
+  "clock_samples": {
+    "pc_elapsed_ms": 118179,
+    "esp_elapsed_ms": 31978,
+    "first_pc_minus_esp_ms": 11795,
+    "last_pc_minus_esp_ms": 97996
+  },
+  "user_serial_observations": {
+    "firmware_id": "R7-ff4ea6a0f5395c1c",
+    "network_flags": "1/1/1/1",
+    "ai_accepted": 0,
+    "ai_rejected": 4,
+    "last_reject": "TIMESTAMP",
+    "timeout_event_uptime_s": 62.61,
+    "ack_safe_event_uptime_s": 68.79,
+    "normal_after_ack": true
+  },
+  "conclusion": "Inbound MQTT works enough to reach parser; replay rejected by timestamp validation. Capture demonstrates slow device time progression relative to PC; latency also contributes to receive-time offset. Model recognition is not the blocker.",
+  "unresolved": [
+    "Fix/choose simulation clock synchronization strategy without disabling timestamp validation",
+    "Capture must overlap replay; use two concurrent terminals",
+    "No accepted AI-triggered state transition demonstrated yet"
+  ],
+  "formal_acceptance_updated": false,
+  "firmware_changed": false,
+  "reference": "https://docs.wokwi.com/guides/esp32-wifi"
+}

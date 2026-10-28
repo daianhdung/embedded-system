@@ -1,0 +1,28 @@
+{
+  "domain": "CLOCK_MAPPING_SOFTWARE_NOT_WOKWI_ACCEPTANCE",
+  "date": "2026-10-28",
+  "status": "PASS",
+  "python_tests": 26,
+  "host_core": "PASS_ASAN_UBSAN",
+  "regression": "PC UTC +98s rejected by unchanged AiTracker; mapped anchor accepted, TTL/replay still checked",
+  "broker_test": "PASS_LOCALHOST_FAKE_DEVICE_TEST_AT_25_PERCENT_CLOCK_SPEED",
+  "new_wokwi_runtime": "NOT_RUN",
+  "real_hardware_utc_behavior": "UNCHANGED",
+  "clock_mapping": "EXPLICIT_WOKWI_SIMULATED_UTC_ONLY; not a physical clock synchronization fix",
+  "firmware_source_unchanged": true,
+  "formal_ledger_unchanged": true,
+  "logs": {
+    "wokwi-clock-python.log": "ec9b1484598e488c1c883f93f168212b9d22297a5b50efa1501da422ce93c313",
+    "wokwi-clock-host.log": "b3bacbed78f8f3c6a19975af038798bbd2b34ccf5a444fa7884b22124a72b41a",
+    "wokwi-clock-broker-smoke.log": "31e180bd80633f2df57491adbf2834c0fcdf46dcd311b10e58b1584a59fb48cc"
+  },
+  "source_sha256": {
+    "tools/ai_publish.py": "9c9f6a8f0c8e57b458f258c5b8aab4008513a56a7ad546e4ccb68c2a6a8ebab4",
+    "tools/wokwi_clock.py": "06ae789b68de895d556d7605dfe41ebbfacf86a215e58cc95030cbb8198a35fb",
+    "tools/capture_mqtt.py": "99d3aa85677ea41affd9a2ee641861b77b7ef36664c7d651260e38bcef48ff3a",
+    "tools/s8_track.py": "6dcf309349def24f3a62200ee3b94cad3c54b53812e2cf2e0dbf7ab49eadfbb0",
+    "test/test_wokwi_clock.py": "834ac7cbc8458d05dd2afe43567f1c97003a49b94f299ceab4bb059735d55b5e",
+    "test/host/test_ai.cpp": "9793ad6307f07904dbe16736caa205c936e21c448338b5b33d4551e26e94e053",
+    "test/broker_smoke.py": "c41282731c4e020ccf2aff17790336d5bbe9dd7391c6673c4fd18f548265f617"
+  }
+}

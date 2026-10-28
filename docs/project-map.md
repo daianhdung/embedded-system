@@ -47,11 +47,13 @@ firmware/
 | Hiểu còi, relay và servo được điều khiển thế nào | `src/outputs.cpp` |
 | Hiểu nhận AI qua MQTT và kiểm tra bản tin | `src/network.cpp`, `src/ai_contract.cpp` |
 | Hiểu dữ liệu hiện trên LCD/log | `src/display.cpp`, `src/telemetry.cpp`, `src/mqtt_payload.cpp` |
+| Quan sát model thật, không MQTT | `tools/ai_observe.py`, [hướng dẫn](ai-observation.md) |
+| Plugin model YOLO lửa/khói | `tools/yolo_plugin.py` |
 | Thử nguồn AI tạm thời từ PC | `tools/ai_publish.py` |
 | Thu minh chứng khi chạy | `tools/capture_mqtt.py` |
 | Xem/ghi bảng nghiệm thu | `tools/s8_track.py` |
 
-Cặp `include/*.h` và `src/*.cpp` thường cùng một module: `.h` khai báo giao diện/kiểu, `.cpp` triển khai. Python trong `tools/` chạy trên PC, không được nạp vào ESP32. `test/` chạy trên máy để kiểm tra code, không phải vòng điều khiển của ESP32. Chưa có weights/model thật trong đường chạy hiện tại.
+Cặp `include/*.h` và `src/*.cpp` thường cùng một module: `.h` khai báo giao diện/kiểu, `.cpp` triển khai. Python trong `tools/` chạy trên PC, không được nạp vào ESP32. `test/` chạy trên máy để kiểm tra code, không phải vòng điều khiển của ESP32. Model thử nghiệm có weights local trong `models/` (Gitignore); xem hướng dẫn quan sát. Luồng nghiệm thu MQTT/model thật chưa hoàn tất.
 
 ## 4. Những gì nằm ngoài repo firmware
 

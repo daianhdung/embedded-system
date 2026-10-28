@@ -1,6 +1,6 @@
 # S7–S8: khung tích hợp và công cụ kiểm thử R7
 
-Theo yêu cầu ngày28/10/2026, model thật sẽ thay sau. Bản này hoàn thiện đường tích hợp và công cụ đếnS8 bằng mock. S5 vẫn hoãn. **Model/metrics thật, camera thực và260lượt nghiệm thu chưa được đánh hoàn thành.**
+Ở mốc triển khai khung ban đầu ngày28/10/2026, model thật được hoãn để hoàn thiện đường tích hợp và công cụ đếnS8 bằng mock. Cập nhật mới: đã có [model pretrained và observer local](ai-observation.md), chưa nghiệm thu model thật với ESP32. S5 vẫn hoãn. **Model/metrics thật, camera thực và260lượt nghiệm thu chưa được đánh hoàn thành.**
 
 [Kết quả kiểm chứng guide ngày 28/10/2026](evidence/guide-verification-2026-10-28/README.md): phần mềm và MQTT localhost đã chạy đạt; Wokwi trực tiếp chưa chạy được.
 
@@ -29,6 +29,8 @@ Lệnh này buildESP32, chạy test lõi/parser/fusion, unitPython và scenario 
 [Báo cáo kiểm tra đã chạy](evidence/s7s8-final-checks-2026-10-28/report.json): build, host,11unitPython và PC-broker smoke đềuPASS. Bộ scenario host có240PASS/0FAIL/20DEFERRED; số này không phải240lượt Wokwi đạt.
 
 ## 3. Thu log và gửi replay
+
+**Nếu ESP báo `TIMESTAMP` khi Wokwi chạy chậm:** dùng [hướng dẫn chuyển mốc giờ Wokwi](wokwi-clock.md). Luồng dưới đây dùng UTC thật mặc định; không áp dụng khi đồng hồ ESP đang lệch PC. Hai terminal phải chạy đồng thời.
 
 Trước khi chạy: Wokwi phải ở `NORMAL`, `Local/AI: 0/0`, mạng `1/1/1/1`, DHT đọc hợp lệ và không có chương trình khác đang gửi AI vào cùng topic. Host/port/prefix của hai công cụ phải khớp cấu hình ESP32; mặc định là `broker.hivemq.com:1883`, prefix `ptit/nhom07/lab-7c49e2`.
 
@@ -82,6 +84,8 @@ Nếu không thấy kết quả mong đợi:
 | Báo file đã tồn tại | Đổi tên capture cho lượt mới, không ghi đè bằng chứng cũ |
 
 ## 4. Thay model thật sau bằng plugin
+
+**Cập nhật:** model YOLOv8n pretrained đã được người dùng tải/nạp và thử ảnh/webcam. Đã thêm plugin cụ thể cùng [chế độ quan sát không MQTT](ai-observation.md). Phần dưới mô tả giao diện chung; chưa nghiệm thu đường model thật→MQTT→ESP hoặc metrics. Các ghi chú model hoãn ở đầu guide phản ánh mốc triển khai khung ban đầu.
 
 | Thành phần | Hiện tại |
 |---|---|

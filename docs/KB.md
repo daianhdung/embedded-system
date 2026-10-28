@@ -8,7 +8,7 @@ Cập nhật 28/10/2026, theo trao đổi trực tiếp với người dùng. Đ
 
 ## Tiến độ S0–S9 — bắt đầu tại đây
 
-**Đã triển khai phần mềm tới S8 theo chế độ mock; model thật hoãn theo người dùng28/10/2026.** S5 vẫnHOÃN. S6 có mạng/contract/fusion; S7 có adapter/replay/plugin để thay model sau; S8 có regression, capture và công cụ quản lý bảng nghiệm thu. Build/host/unit/PC-broker smokePASS. **Chưa hoàn tất nghiệm thu S8:** còn lượtWokwi/ảnh, model/metrics thật và các phép đo mạng/latency trênMCU. Không lấy kết quảmock làm kết quảmodel.
+**Đã triển khai phần mềm tới S8 theo chế độ mock; cập nhật mới nhất có model YOLOv8n và observer chạy local, chưa nghiệm thu model→MQTT→ESP.** S5 vẫnHOÃN. S6 có mạng/contract/fusion; S7 có adapter/replay/plugin để thay model sau; S8 có regression, capture và công cụ quản lý bảng nghiệm thu. Build/host/unit/PC-broker smokePASS. **Chưa hoàn tất nghiệm thu S8:** còn lượtWokwi/ảnh, model/metrics thật và các phép đo mạng/latency trênMCU. Không lấy kết quảmock làm kết quảmodel.
 
 | Bước | Nội dung | Trạng thái hiện tại | Checklist chi tiết |
 |---|---|---|---|
@@ -19,13 +19,13 @@ Cập nhật 28/10/2026, theo trao đổi trực tiếp với người dùng. Đ
 | S4 | Servo cửa + hai relay | Đã code; đã thấy LED tải sáng và xác nhận đóng cửa; toàn bộ state chờ S5 | [I01–I07](#s2-s4) |
 | S5 | Kiểm chứng local trong Wokwi | **HOÃN theo người dùng**, chưa đóng L01–L10 | [L01–L10](#s5) |
 | S6 | MQTT, contract, TTL, mock | Có code/test; log người dùng chứng minh chiều ESP→PC; nhậnAI/reconnect/latency còn chờ | [N01–N08](#s6) |
-| S7 | Adapter/publisher AI + model | **Khung đã có R7; model/dataset/train/metrics HOÃN** | [M01–M10](#s7) |
+| S7 | Adapter/publisher AI + model | **Khung R7 đã có; YOLOv8n pretrained đã nạp/thử ảnh và webcam; có observer/plugin. Đánh giá, lọc thời gian và tích hợp model→MQTT→ESP chưa hoàn tất.** | [M01–M10](#s7) |
 | **S8** | **Công cụ kiểm thử và nghiệm thu** | **Tooling đã có; host240PASS/20DEFERRED; bảng260lượt thực vẫnNOT_RUN** | **[E01–E08 và13TC](#s8)** |
 | S9 | Đồng bộ báo cáo và đóng gói | Chưa sửa DOCX | [R01–R09](#s9) |
 
 **Việc tiếp theo:** Stop/Start bảnR7, dùng [hướng dẫn S7–S8](s7-s8-guide.md) để thu log và thử replay; `tools/verify_project.py` chạy các kiểm tra phần mềm bằng một lệnh. Các phần model thật giữ hoãn để thay sau, không cản việc chuẩn bị/test tích hợp bằngmock.
 
-Mốc local đã commit: `a730740` (layout + gas10ppm + volume0.25). Các thay đổi S6–S8/R7 nằm trong working tree, chưa tự commit. [Hướng dẫn hiện tại S7–S8](s7-s8-guide.md); [contract S6](reference/s6-mqtt-contract.md).
+Mốc local đã commit: `a730740` (layout + gas10ppm + volume0.25). Phần S6–S8/R7 đã được commit theo nhóm chức năng; xem git log. Các bước AI local và clock mapper được ghi ở nhật ký phía dưới. [Hướng dẫn hiện tại S7–S8](s7-s8-guide.md); [contract S6](reference/s6-mqtt-contract.md).
 
 ## Cách đọc và điểm bắt đầu
 
@@ -268,7 +268,7 @@ Bổ sung bằng chứng người dùng: [summary log ESP→broker→PC](evidenc
 
 ### S7 Checklist adapter và AI thay sau
 
-Theo yêu cầu mới28/10: đã làm đường tích hợp để thay model sau; chưa train/tảiweights. [Hướng dẫn và giới hạn](s7-s8-guide.md). M01–M07 dưới đây là phần model thật vẫn mở; M08–M10 là khung đã thực hiện.
+Theo yêu cầu mới28/10: đã làm đường tích hợp để thay model sau; chưa train/tảiweights. [Hướng dẫn và giới hạn](s7-s8-guide.md). M01–M07 dưới đây chưa hoàn tất. Cập nhật: người dùng đã nạp model pretrained và thử ảnh/webcam; có [observer/plugin YOLO](ai-observation.md) nhưng chưa nghiệm thu MQTT với model thật. M08–M10 là khung đã thực hiện.
 
 - [x] M08: `ai_adapter.py` validation/contract; `ai_publish.py` replay hoặc plugin, confidence hữu hạn, timestamp capture; unknown/camera lỗi không tự phát bìnhthường. Unit test và replay qua localhostbrokerPASS; camera thật chưa chạy.
 - [x] M09: Giao diện `module:function` cho model riêng, nhận frameBGR; detector helperFire ưu tiênSmoke, khôngbox→unknown. Chưa khóa classifier/detector hoặc thêm temporalfilter chưa kiểm định.
@@ -470,3 +470,37 @@ Người dùng thấy cấu trúc rối và hỏi bước tiếp theo. ThêmPCCC
 ### Kiểm chứng guide S7–S8 — 28/10/2026
 
 Đã chạy lại build, host core, 11 unit Python, 240 scenario host PASS/20 DEFERRED, replay dry-run và broker localhost smoke. Bảng nghiệm thu vẫn 260 NOT_RUN. Guide bổ sung điều kiện nền, khoảng replay 5 giây, bảng đầu ra mong đợi và cách phân biệt PUBACK với ESP thực nhận. Xem [kết quả và giới hạn](evidence/guide-verification-2026-10-28/README.md). Wokwi trực tiếp chưa chạy được vì truy cập VS Code qua Computer Use timeout; không lấy kết quả host/mock thay bằng chứng mô phỏng.
+
+### Model thật và chế độ quan sát local — 28/10/2026
+
+Người dùng đã tạo môi trường AI, tải weights rabahdev/fire-smoke-yolov8n (revision 13017fe8af477c25f5298d168e2dfede4b000753), nạp đúng nhãn smoke/fire và thử ảnh/webcam. Phản hồi: fire 0,426; smoke 0,689/0,660; một ảnh khó không detection; tóc bị nhận nhầm smoke khoảng0,36. Đây là quan sát rời rạc, không phải metrics hoặc chốt chất lượng model. Không sao chép ảnh cá nhân vào repo/dataset.
+
+Theo yêu cầu triển khai: thêm `tools/yolo_plugin.py` (lazy load, BGR, Prediction/None), `tools/ai_observe.py` (camera/ảnh/video, JSONL từngframe, terminal mỗi1s, S lưuảnh/Q thoát), requirements đã thử và [manifest](../models/fire-smoke-yolov8n.manifest.json). Observer không gửi MQTT. Giữ ngưỡng xem0,25/chọn0,8 theo firmware; confidence thấp, khôngbox hoặc suy luận≥15s không tạo nhãn bìnhthường. Không đổiGPIO/FSM/TTL/ACK. Chưa thêm lọc thời gian, chưa cho model điều khiểnWokwi. Đánhgiá model/dataset/licensephụthuộc/S7 và S8 vẫn chưa đóng.
+
+Xem [hướng dẫn quan sát](ai-observation.md). Kiểm tra thay đổi này gồm unit tests cổng confidence/plugin và suy luận ảnh/video headless bằng weights local; camera GUI/ảnh S do người dùng chạy để xác nhận. Không gọi kết quả đó là đo realtime/độ chính xác hoặc nghiệmthu260lượt.
+
+### Replay đến ESP nhưng bị TIMESTAMP — 28/10/2026
+
+Log người dùng mới xác nhận WiFi/MQTT/Sub/UTC=1/1/1/1; sau replay, Nhan/loi/drop=0/4/0 và Ly do goi cuoi=TIMESTAMP. Inbound đã tới bước kiểm tra timestamp, không còn chỉ là thiếu bản tin do model dưới confidence. Capture ai-live-01 kết thúc trước replay: không dùng file này làm bằng chứng replay/FSM. Trong capture, PC trôi118,179s còn UTC ESP trôi31,978s; sai biệt thời gian lúc PC nhận telemetry tăng11,795→97,996s (bao gồm độ trễ truyền). Thời gian mô phỏng tiến chậm là vấn đề cần xử lý; UTC=1 hiện chỉ gate epoch tối thiểu, không bảo đảm đồng hồ còn khớp PC. Không tắt TTL/future/replay validation để che lỗi; chưa sửa timestamp hoặc firmware trong lượt chẩn đoán.
+
+Local log còn chứng minh timeout tại62,61s, giảm MQ rồi ACK_SAFE tại68,79s và NORMAL sau đó; đây là lệnh trong log, không tự xác nhận cơ khí hoặc toànS5. Xem [bản chẩn đoán](evidence/s6-replay-timestamp-diagnosis-2026-10-28.json). Chưa đánh bất kỳ lượt nghiệmthu PASS. Bước tiếp theo là xử lý clock của luồng tích hợp Wokwi/PC và thu capture đồng thời replay, không yêu cầu kiểm thử chất lượng AI thêm.
+
+### Chuyển miền thời gian PC→Wokwi, giữ UTC thật mặc định — 28/10/2026
+
+Theo yêu cầu sửa lỗiTIMESTAMP: thêm `tools/wokwi_clock.py` và cờ `--wokwi-clock`/`--expected-firmware-id` trong publisher. Chỉ lấy mốc telemetry mới khôngretained, đúngfirmware/boot, modeSIMULATION và mạng/clockhợp lệ; lấy trước khi đọcframe, không ngoại suy theo tốc độ PC, không dùng lại cùngmốc đểgia hạnAI. Telemetryquá5sPC/đợiquá10s không gửi; nguồnquá15sPC không gửi; disconnectvôhiệumốc vàrestartdừngpublisher. LoggiữsourceUTC vàghiWOKWI_SIMULATED_UTC; capturethêmclockdomainkhai báo. Không thayfirmware/contract4trường/ngưỡng/TTL/futuretolerance/GPIO/FSM. Đây là thíchnghi môi trường môphỏng, không phải đồngbộUTC thật hoặc chứngminh timingphầncứng; TTLtrênESP vẫnlàgiây môphỏng. [Hướngdẫn vàhai lệnhchạy đồngthời](wokwi-clock.md). RuntimeWokwi saufixchờ người dùng xácnhận; không đóngnghiệmthu từmockfixture.
+
+Kiểm chứng clockmapper: [report](evidence/wokwi-clock-checks-2026-10-28/report.json) vàlogcùngthưmục. 26unittestPythonPASS; hostASan/UBSanPASS với caUTC+98s bịreject, anchorđúngđượcaccept vàTTL/replay giữ nguyên; localhostbrokerPCfixture25%clock nhận2packetmapped vàunknownkhôngphát. Hashfirmwaresourcevàbảng260lượt khôngđổi. Chưa có lượtWokwisaufix; không tựđánhPASS nghiệmthu.
+
+### Wokwi replay clock mapping: runtime evidence - 28/10/2026
+
+[Trace and limitations](evidence/wokwi-replay-clock-2026-10-28/summary.json): R7-ff4ea6a0f5395c1c, boot a475d28744300a80; publisher 4 PUBACK + 1 unknown suppressed. ESP accepted 0->4, rejected stays 4 from the previous run. Local level 0 throughout AI-triggered sequence: NORMAL -> WARNING/AI_WARNING -> FIRE_SUPPRESSION/AI_DANGER -> RECOVERY/DANGER_CLEARED. Command telemetry matches buzzer/loads/door policy. This demonstrates inbound MQTT + fusion/FSM with REPLAY_MOCK and WOKWI_SIMULATED_UTC; not real-model accuracy, independent motion/audio evidence, post-replay ACK, reconnect/flood/physical latency or full S6/S8 acceptance. No formal260run entry updated. Next: safe ACK to NORMAL and optionally run real model plugin using the same explicit clock mode.
+
+### Chẩn đoán gửi confidence thấp từ model thật — 28/10/2026
+
+Theo yêu cầu tiếp tục khi plugin chỉ UNAVAILABLE: bổ sung opt-in `yolo_plugin:predict_raw`, giữ nguyên `predict`0,8 và observer. Raw ưu tiên dự đoán đủ0,8; nếu không có thì gửi phát hiện≥0,25 với confidence nguyên bản, không cóbox/stale không phát và không sinh binh_thuong. Publisher thêm cờlog meets_confidence_threshold, không thêmtrường vào schemaMQTT. ESP giữ luật sẵn có: nhậnconfidence0,36 thì AIlevel0; localdanger vẫn có quyền bật. Lưuý raw là chẩnđoán đườngtruyền: lowconfidence có thể thay AIlevelcao trướcđó bằng0 và đưa FSM sangRECOVERY theo luật hiện tại; không coi raw là giải pháp báo giả đã kiểm định. Không đổi firmware/GPIO/ngưỡng/TTL. [Cách chạy](ai-observation.md).
+
+Raw confidence checks: [report](evidence/raw-confidence-checks-2026-10-28/report.json): 29 Python tests PASS, host ASan/UBSan PASS, localhost MQTT fixture preserves score0.36. Live camera-to-ESP raw mode still requires user run; no formal acceptance updated.
+
+### Người dùng hoàn tất lượt thử model qua camera — 28/10/2026
+
+Người dùng xác nhận đã test xong và yêu cầu chia commit. [Trích kết quả publisher](evidence/real-model-user-publish-2026-10-28.json): đã thấy nhãn lua với confidence khoảng0,466–0,753 và PUBACK khi đưa ảnh lửa vào camera; dưới ngưỡng0,8 nên chưa kỳ vọng kích FIRE từ các bản tin này. Đây là bằng chứng model thật→publisher→broker; chưa có capture/bộ đếm ESP tương ứng để tự kết luận nhận đủ hoặc hoàn tất AI/S8. Replay trước đã có trace ESP nhận4gói/chuyểnFSM. Giữ nguyên giới hạn về modelaccuracy, rawmode, simulationclock và nghiệmthu260lượt. Không đưa weights, ảnh cá nhân hay runs/ vào Git.
