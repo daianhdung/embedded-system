@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "sensors.h"
+#include "ai_contract.h"
 
 enum class SystemState { NORMAL, WARNING, FIRE_SUPPRESSION, RECOVERY };
 
@@ -14,13 +15,17 @@ enum TriggerReason : uint16_t {
   REASON_TEMPERATURE_RATE = 1 << 4,
   REASON_DHT_FAULT = 1 << 5,
   REASON_FAST_FAULT = 1 << 6,
-  REASON_LDR_FAULT = 1 << 7
+  REASON_LDR_FAULT = 1 << 7,
+  REASON_AI_SMOKE = 1 << 8,
+  REASON_AI_FIRE = 1 << 9
 };
 
 struct SafetySnapshot {
   SystemState state = SystemState::NORMAL;
   SystemState previousState = SystemState::NORMAL;
-  uint8_t dangerLevel = 0;
+  uint8_t dangerLevel = 0; // merged level, preserves existing FSM API
+  uint8_t localLevel = 0;
+  uint8_t aiLevel = 0;
   uint16_t activeReasons = REASON_NONE;
   uint16_t latchedReasons = REASON_NONE;
   uint32_t stateEnteredMs = 0;
@@ -39,7 +44,7 @@ struct SafetySnapshot {
 // Lõi thuần C++ để thử FSM bằng đồng hồ giả trên máy, không cần Arduino.
 class SafetyController {
  public:
-  bool update(const SensorSnapshot& sensors, uint32_t now);
+  bool update(const SensorSnapshot& sensors, uint32_t now, const AiSignal& ai = AiSignal{});
   const SafetySnapshot& snapshot() const { return status_; }
 
  private:
@@ -64,3 +69,5 @@ class SafetyController {
 
 const char* stateName(SystemState state);
 const char* primaryReason(uint16_t reasons);
+
+const char* triggerSource(uint16_t reasons);

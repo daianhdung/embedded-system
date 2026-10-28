@@ -9,3 +9,14 @@
 .DS_Store
 include/secrets.h
 .env
+
+.venv/
+__pycache__/
+*.pyc
+
+.venv-ai/
+# Local camera/model assets and recordings
+models/*.pt
+models/*.pth
+models/*.onnx
+runs/

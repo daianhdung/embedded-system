@@ -53,7 +53,9 @@ for relay in ['pump', 'valve']:
     assert frozenset([relay + ':NO', relay + '_load_r:1']) in links
     assert frozenset([relay + ':COM', 'esp:3V3']) in links
 for file in root.rglob('*'):
-    if any(part in file.parts for part in ['.pio', '.git', '.host-build']) or not file.is_file():
+    if any(part in file.parts for part in ['.pio', '.git', '.host-build', '.venv', '.venv-ai', '__pycache__', 'models', 'datasets', 'runs']) or not file.is_file():
         continue
-    assert b'\0' not in file.read_bytes(), file
+    # Screenshots/video/model files are legitimate binary evidence, not source.
+    if file.suffix in {'.cpp', '.h', '.py', '.ini', '.toml', '.json', '.md', '.yaml', '.yml'}:
+        assert b'\0' not in file.read_bytes(), file
 print('PASS wiring: DevKit V1/MQ2/LDR/servo pins, ADC1, 3V3 LDR, independent PWM, DHT and relay loads')

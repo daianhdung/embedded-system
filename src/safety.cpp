@@ -12,7 +12,14 @@ const char* stateName(SystemState state) {
   return "UNKNOWN";
 }
 
+const char* triggerSource(uint16_t reasons) {
+  const bool ai = reasons & (REASON_AI_SMOKE | REASON_AI_FIRE);
+  const bool local = reasons & ~(REASON_AI_SMOKE | REASON_AI_FIRE);
+  return local ? (ai ? "LOCAL+AI" : "LOCAL") : (ai ? "AI" : "NONE");
+}
+
 const char* primaryReason(uint16_t reasons) {
+  if (reasons & REASON_AI_FIRE) return "AI_FIRE";
   if (reasons & REASON_FLAME) return "FLAME";
   if (reasons & REASON_SMOKE_DANGER) return "SMOKE_DANGER";
   if (reasons & REASON_TEMPERATURE) return "TEMPERATURE";
@@ -21,6 +28,7 @@ const char* primaryReason(uint16_t reasons) {
   if (reasons & REASON_DHT_FAULT) return "DHT_FAULT";
   if (reasons & REASON_FAST_FAULT) return "FAST_FAULT";
   if (reasons & REASON_LDR_FAULT) return "LDR_FAULT";
+  if (reasons & REASON_AI_SMOKE) return "AI_SMOKE";
   return "NONE";
 }
 
@@ -101,7 +109,7 @@ void SafetyController::transition(SystemState state, const char* reason, uint32_
   status_.transitionReason = reason;
 }
 
-bool SafetyController::update(const SensorSnapshot& s, uint32_t now) {
+bool SafetyController::update(const SensorSnapshot& s, uint32_t now, const AiSignal& ai) {
   if (!started_) {
     started_ = true;
     startedMs_ = now;
@@ -109,7 +117,11 @@ bool SafetyController::update(const SensorSnapshot& s, uint32_t now) {
   }
   const bool ackEdge = pressedEdge(s.ackPressedRaw, now);
   const SystemState before = status_.state;
-  status_.dangerLevel = evaluate(s, now);
+  status_.localLevel = evaluate(s, now);
+  status_.aiLevel = ai.fresh(now) && ai.level <= 2 ? ai.level : 0;
+  status_.dangerLevel = status_.localLevel > status_.aiLevel ? status_.localLevel : status_.aiLevel;
+  if (status_.aiLevel == 2) status_.activeReasons |= REASON_AI_FIRE;
+  else if (status_.aiLevel == 1) status_.activeReasons |= REASON_AI_SMOKE;
   if (status_.dangerLevel == 0) {
     if (!safeTracking_) { safeTracking_ = true; safeSinceMs_ = now; }
   } else {
@@ -121,11 +133,11 @@ bool SafetyController::update(const SensorSnapshot& s, uint32_t now) {
   if (status_.dangerLevel > 0) status_.latchedReasons |= status_.activeReasons;
   switch (status_.state) {
     case SystemState::NORMAL:
-      if (status_.dangerLevel == 2) transition(SystemState::FIRE_SUPPRESSION, "LOCAL_DANGER", now);
-      else if (status_.dangerLevel == 1) transition(SystemState::WARNING, "LOCAL_WARNING", now);
+      if (status_.dangerLevel == 2) transition(SystemState::FIRE_SUPPRESSION, status_.localLevel == 2 ? "LOCAL_DANGER" : "AI_DANGER", now);
+      else if (status_.dangerLevel == 1) transition(SystemState::WARNING, status_.localLevel == 1 ? "LOCAL_WARNING" : "AI_WARNING", now);
       break;
     case SystemState::WARNING:
-      if (status_.dangerLevel == 2) transition(SystemState::FIRE_SUPPRESSION, "LOCAL_DANGER", now);
+      if (status_.dangerLevel == 2) transition(SystemState::FIRE_SUPPRESSION, status_.localLevel == 2 ? "LOCAL_DANGER" : "AI_DANGER", now);
       else if (status_.dangerLevel == 0) transition(SystemState::RECOVERY, "HAZARD_CLEARED", now);
       break;
     case SystemState::FIRE_SUPPRESSION:
@@ -140,7 +152,7 @@ bool SafetyController::update(const SensorSnapshot& s, uint32_t now) {
     case SystemState::RECOVERY:
       if (status_.dangerLevel == 2 && !status_.suppressionLocked) {
         // Một nguy hiểm mới vẫn kích được chữa cháy nếu lượt trước chưa chạm hạn.
-        transition(SystemState::FIRE_SUPPRESSION, "NEW_LOCAL_DANGER", now);
+        transition(SystemState::FIRE_SUPPRESSION, status_.localLevel == 2 ? "NEW_LOCAL_DANGER" : "NEW_AI_DANGER", now);
       } else if (status_.ackReady && ackEdge) {
         status_.suppressionLocked = false;
         status_.latchedReasons = REASON_NONE;

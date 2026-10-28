@@ -6,6 +6,9 @@
 #include <cstring>
 #include "config.h"
 #include "outputs.h"
+#include "network.h"
+#include "network_config.h"
+#include "firmware_identity.h"
 
 namespace {
 bool includesCsv() { return Config::kSerialLogFormat != Config::SerialLogFormat::Readable; }
@@ -23,7 +26,7 @@ void printLine(const char* format, ...) {
 }
 
 const char* sourceName(const SafetySnapshot& safety) {
-  return safety.state == SystemState::NORMAL && safety.activeReasons == 0 ? "NONE" : "LOCAL";
+  return triggerSource(safety.latchedReasons);
 }
 
 void printCsvSnapshot(const SensorSnapshot& s, const SafetySnapshot& f, uint32_t now,
@@ -35,9 +38,9 @@ void printCsvSnapshot(const SensorSnapshot& s, const SafetySnapshot& f, uint32_t
       f.state == SystemState::NORMAL && f.previousState == SystemState::RECOVERY)
       ? "OPERATOR" : sourceName(f);
   // Giữ 19 cột đầu Phase 1; nối thêm dữ liệu luật/FSM. Không đưa NaN vào JSON về sau.
-  char row[640];
+  char row[896];
   snprintf(row, sizeof(row),
-      "%lu,%d,%d,%.2f,%.2f,%.3f,%d,%lu,%d,%lu,%s,%lu,%lu,%d,%s,%s,%d,%d,SIMULATION,%s,%s,%s,%u,%u,%u,%d,%d,%d,%d,%d,%d,%d,%lu,%lu,%d,%u,%d",
+      "%lu,%d,%d,%.2f,%.2f,%.3f,%d,%lu,%d,%lu,%s,%lu,%lu,%d,%s,%s,%d,%d,SIMULATION,%s,%s,%s,%u,%u,%u,%d,%d,%d,%d,%d,%d,%d,%lu,%lu,%d,%u,%d,%u,%u",
       static_cast<unsigned long>(now), s.smokeAdc, s.flameDetected,
       s.temperatureC, s.humidityPct, s.temperatureRateCps, s.fastValid,
       static_cast<unsigned long>(s.fastSampleMs), s.dhtValid,
@@ -51,14 +54,16 @@ void printCsvSnapshot(const SensorSnapshot& s, const SafetySnapshot& f, uint32_t
       static_cast<unsigned long>(s.ldrSampleMs),
       static_cast<unsigned long>(now - s.ldrSampleMs), f.doorOpen,
       static_cast<unsigned int>(f.doorOpen ? Config::kDoorOpenAngle : Config::kDoorClosedAngle),
-      f.thermalUnconfirmed);
+      f.thermalUnconfirmed, static_cast<unsigned int>(f.localLevel),
+      static_cast<unsigned int>(f.aiLevel));
   Serial.println(row);
 }
 }
 
 void printTelemetryHeader() {
   if (includesReadable()) {
-    Serial.println("=== LOCAL R5: LDR + SERVO + DHT HOLD | PHASE 2 ===");
+    Serial.println("=== S7/S8 R7: LOCAL + MQTT + PLUGGABLE AI / TEST TOOLS ===");
+    printLine("Firmware: %s", firmwareIdentity());
     printLine("Khoi: canh bao >=%d, nguy hiem >=%d ADC", Config::kSmokeWarningAdc, Config::kSmokeDangerAdc);
     printLine("Nhiet: >=%.1f C hoac tang >=%.1f C/s", Config::kTemperatureDangerC, Config::kTemperatureRateDangerCps);
     printLine("Bom toi da %lu s; an toan %lu s roi NHAN ACK MOI",
@@ -75,7 +80,8 @@ void printTelemetryHeader() {
         static_cast<unsigned int>(Config::kDoorServoPin), static_cast<unsigned int>(Config::kDoorClosedAngle),
         static_cast<unsigned int>(Config::kDoorOpenAngle), static_cast<unsigned long>(Config::kServoFrequencyHz),
         static_cast<unsigned int>(Config::kServoChannel), static_cast<unsigned int>(Config::kBuzzerChannel));
-    Serial.println("SIMULATION: ADC chua hieu chuan ppm; LDR khong phai cam bien lua IR; chua co MQTT/AI.");
+    Serial.println("SIMULATION: ADC chua hieu chuan ppm; LDR khong phai cam bien lua IR; MQTT da co; AI chi la contract/mock, chua co model.");
+    printLine("MQTT: %s | AI topic: %s", NetworkConfig::kEnabled ? "ENABLED" : "DISABLED", NetworkConfig::kAiTopic);
     Serial.println("Relay npn: HIGH=BAT. Den tai BOM/VAN qua COM-NO.");
     printLine("Log gon: moi %lu ms | EVENT in ngay | Muc: 0=an toan,1=canh bao,2=nguy hiem",
         static_cast<unsigned long>(Config::kLogIntervalMs));
@@ -83,7 +89,7 @@ void printTelemetryHeader() {
     Serial.println("AUDIO DIAG: volume Wokwi 0.25; PWM readback khong phai do song GPIO.");
   }
   if (includesCsv()) {
-    Serial.println("uptime_ms,smoke_adc,flame,temperature_c,humidity_pct,temp_rate_c_s,fast_valid,fast_sample_ms,dht_valid,dht_attempt_ms,dht_age_ms,dht_attempts,dht_errors,ack_raw,state,trigger_source,relay_pump,relay_valve,mode,record_type,previous_state,transition_reason,local_level,active_reason_mask,latched_reason_mask,suppression_locked,ack_ready,buzzer,red_led,green_led,ldr_adc,ldr_valid,ldr_sample_ms,ldr_age_ms,door_open,door_angle_cmd,thermal_unconfirmed");
+    Serial.println("uptime_ms,smoke_adc,flame,temperature_c,humidity_pct,temp_rate_c_s,fast_valid,fast_sample_ms,dht_valid,dht_attempt_ms,dht_age_ms,dht_attempts,dht_errors,ack_raw,state,trigger_source,relay_pump,relay_valve,mode,record_type,previous_state,transition_reason,merged_level,active_reason_mask,latched_reason_mask,suppression_locked,ack_ready,buzzer,red_led,green_led,ldr_adc,ldr_valid,ldr_sample_ms,ldr_age_ms,door_open,door_angle_cmd,thermal_unconfirmed,local_rule_level,ai_level");
   }
 }
 
@@ -91,7 +97,7 @@ void printStateEvent(const SensorSnapshot& sensors, const SafetySnapshot& safety
   if (includesReadable()) {
     printLine("[EVENT %.2f s] %s -> %s", now / 1000.0,
         stateName(safety.previousState), stateName(safety.state));
-    const char* source = safety.state == SystemState::NORMAL ? "OPERATOR" : "LOCAL";
+    const char* source = safety.state == SystemState::NORMAL ? "OPERATOR" : triggerSource(safety.latchedReasons);
     printLine("  Ly do: %s | Nguon: %s | Kich hoat: %s",
         safety.transitionReason, source, primaryReason(safety.latchedReasons));
   }
@@ -106,6 +112,16 @@ void printTelemetrySnapshot(const SensorSnapshot& s, const SafetySnapshot& f, ui
     printLine("  Hien tai: %s (mask=%u) | Chot: %s/%s",
         primaryReason(f.activeReasons), static_cast<unsigned int>(f.activeReasons),
         sourceName(f), primaryReason(f.latchedReasons));
+    const NetworkSnapshot& n = pollNetwork();
+    printLine("  Local/AI: %u/%u | WiFi/MQTT/Sub/UTC: %d/%d/%d/%d",
+        static_cast<unsigned int>(f.localLevel), static_cast<unsigned int>(f.aiLevel),
+        n.wifi, n.mqtt, n.subscribed, n.clock);
+    printLine("  Task mang: %s | Max loop gap: %lu ms (khong phai latency cam bien)",
+        n.taskStarted ? "ON" : "OFF", static_cast<unsigned long>(maxObservedLocalLoopGap()));
+    printLine("  AI: %s | Nhan/loi/drop: %lu/%lu/%lu | Ly do goi cuoi: %s",
+        n.subscribed && n.clock && n.ai.fresh(millis()) ? "FRESH (model hoac mock)" : "UNAVAILABLE",
+        static_cast<unsigned long>(n.accepted), static_cast<unsigned long>(n.rejected),
+        static_cast<unsigned long>(n.rxDropped), aiRejectName(n.lastReject));
     printLine("  Khoi ADC: %d/4095 | LDR ADC: %d/4095", s.smokeAdc, s.ldrAdc);
     printLine("  Lua gia: %s | LDR: %s | Tuoi: %lu ms",
         s.flameDetected ? "CO" : "KHONG", s.ldrValid ? "OK" : "LOI",

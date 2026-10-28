@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 #include "config.h"
+#include "network.h"
 
 namespace {
 // Giữ API và địa chỉ LCD từ do_an_iot/src/main.cpp của nhóm (Giang Lê).
@@ -24,7 +25,7 @@ void beginDisplay() {
   Wire.begin(Config::kSdaPin, Config::kSclPin);
   lcd.init();
   lcd.backlight();
-  writeLine(0, "LOCAL R5 LDR+CUA");
+  writeLine(0, "S6 MQTT / LOCAL");
   writeLine(1, "DHT: WAIT 3s");
 }
 
@@ -40,7 +41,7 @@ void updateDisplay(const SensorSnapshot& s, const SafetySnapshot& f, uint32_t no
   // Dòng đầu luôn giữ trạng thái và lệnh cửa; các trang dưới đổi dữ liệu.
   snprintf(line, sizeof(line), "%s C:%d", state, f.doorOpen);
   writeLine(0, line);
-  const uint32_t page = (now / 2000) % 4;
+  const uint32_t page = (now / 2000) % 5;
   if (page == 0) {
     snprintf(line, sizeof(line), "S:%4d B%d V%d", s.smokeAdc, f.pumpOn, f.valveOn);
   } else if (page == 1) {
@@ -48,6 +49,10 @@ void updateDisplay(const SensorSnapshot& s, const SafetySnapshot& f, uint32_t no
   } else if (page == 2) {
     if (s.dhtValid) snprintf(line, sizeof(line), "T:%5.1f H:%5.1f", s.temperatureC, s.humidityPct);
     else snprintf(line, sizeof(line), "DHT:%s", s.dhtAttempts == 0 ? "WAIT" : "ERROR");
+  } else if (page == 4) {
+    const NetworkSnapshot& n = pollNetwork();
+    snprintf(line, sizeof(line), "MQ:%s AI:%s", n.subscribed ? "ON" : "OFF",
+        n.subscribed && n.clock && n.ai.fresh(millis()) ? "OK" : "LOST");
   } else if (f.state == SystemState::RECOVERY) {
     snprintf(line, sizeof(line), "%s", f.ackReady ? "AN TOAN:NHAN ACK" :
         (f.suppressionLocked ? "TIMEOUT! CHO ACK" : "CHO AN TOAN 3s"));
