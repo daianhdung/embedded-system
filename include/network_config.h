@@ -3,6 +3,9 @@
 #if __has_include("secrets.h")
 #include "secrets.h"
 #endif
+#if __has_include("pccc_runtime_config.h")
+#include "pccc_runtime_config.h"
+#endif
 #ifndef PCCC_NETWORK_ENABLED
 #define PCCC_NETWORK_ENABLED 1
 #endif
@@ -13,7 +16,7 @@
 #define PCCC_WIFI_PASSWORD ""
 #endif
 #ifndef PCCC_MQTT_URI
-#define PCCC_MQTT_URI "mqtt://broker.hivemq.com:1883"
+#define PCCC_MQTT_URI "mqtt://host.wokwi.internal:1883"
 #endif
 #ifndef PCCC_TOPIC_PREFIX
 #define PCCC_TOPIC_PREFIX "ptit/nhom07/lab-7c49e2"

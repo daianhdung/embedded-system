@@ -29,7 +29,7 @@ class AdapterTests(unittest.TestCase):
     def test_replay_dry_run_no_publish_for_unknown(self):
         with tempfile.TemporaryDirectory() as d:
             source=Path(d)/'input.jsonl';source.write_text('{"label":"lua","confidence":0.9}\nnull\n')
-            completed=subprocess.run([sys.executable,str(ROOT/'tools/ai_publish.py'),'--dry-run','--input',str(source),'--interval','0.1'],capture_output=True,text=True,check=True)
+            completed=subprocess.run([sys.executable,str(ROOT/'tools/ai_publish.py'),'--backend','replay','--dry-run','--input',str(source),'--interval','0.1'],capture_output=True,text=True,check=True)
             rows=[json.loads(line) for line in completed.stdout.splitlines()]
             self.assertEqual(sum(r['event']=='DRY_RUN' for r in rows),1)
             self.assertEqual(sum(r['event']=='UNAVAILABLE' for r in rows),1)

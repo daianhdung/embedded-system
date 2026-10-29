@@ -20,3 +20,9 @@ models/*.pt
 models/*.pth
 models/*.onnx
 runs/
+
+# Local datasets and generated databases
+datasets/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm

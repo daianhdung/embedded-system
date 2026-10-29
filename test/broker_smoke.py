@@ -98,7 +98,7 @@ async def main():
         ticker=asyncio.create_task(slow_device_clock())
         try:
             before_mapped=len(received)
-            mapped=await asyncio.create_subprocess_exec(sys.executable,'tools/ai_publish.py',
+            mapped=await asyncio.create_subprocess_exec(sys.executable,'tools/ai_publish.py','--backend','replay',
                 '--input',str(low_source),'--host','127.0.0.1','--port',str(port),
                 '--prefix','ptit/nhom07/s6-local-test','--interval','0.1',
                 '--wokwi-clock','--expected-firmware-id','FAKE_DEVICE_TEST',

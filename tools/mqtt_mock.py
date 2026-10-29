@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """S6 protocol mock only: no camera, model, inference or training."""
+from runtime_config import MQTT_HOST, MQTT_PORT, TOPIC_PREFIX, setting
+
 import argparse
 import json
 import os
@@ -7,7 +9,7 @@ import threading
 import time
 import uuid
 
-DEFAULT_PREFIX = 'ptit/nhom07/lab-7c49e2'
+DEFAULT_PREFIX = TOPIC_PREFIX
 
 
 def payload_for(case, label='lua', confidence=0.93, now_ms=None):
@@ -34,8 +36,8 @@ def payload_for(case, label='lua', confidence=0.93, now_ms=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--host', default=os.getenv('PCCC_MQTT_HOST', 'broker.hivemq.com'))
-    parser.add_argument('--port', type=int, default=1883)
+    parser.add_argument('--host', default=MQTT_HOST)
+    parser.add_argument('--port', type=int, default=MQTT_PORT)
     parser.add_argument('--prefix', default=os.getenv('PCCC_TOPIC_PREFIX', DEFAULT_PREFIX))
     parser.add_argument('--label', choices=['lua', 'khoi', 'binh_thuong'], default='lua')
     parser.add_argument('--confidence', type=float, default=0.93)
@@ -56,6 +58,7 @@ def main():
         parser.error('Install tools/requirements-mqtt.txt in a Python venv first')
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2,
                          client_id='pccc-s6-mock-' + uuid.uuid4().hex[:10], protocol=mqtt.MQTTv311)
+    if setting('PCCC_MQTT_TLS','0')=='1': client.tls_set()
     username = os.getenv('PCCC_MQTT_USERNAME')
     if username:
         client.username_pw_set(username, os.getenv('PCCC_MQTT_PASSWORD'))

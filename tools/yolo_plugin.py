@@ -1,4 +1,5 @@
 """Local YOLO fire/smoke plugin. Loading/inference never opens MQTT or a camera."""
+from runtime_config import local_path, setting
 from dataclasses import dataclass
 import hashlib
 import math
@@ -6,8 +7,8 @@ from pathlib import Path
 from ai_adapter import detection_result
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_WEIGHTS = ROOT / 'models/fire-smoke-yolov8n.pt'
-ACCEPT_CONFIDENCE = 0.8  # Matches current firmware; not a calibrated operating point.
+DEFAULT_WEIGHTS = local_path('PCCC_AI_MODEL_PATH','models/fire-smoke-yolov8n.pt')
+ACCEPT_CONFIDENCE = float(setting('PCCC_AI_CONFIDENCE','0.8'))  # Matches current firmware; not a calibrated operating point.
 
 
 def assess(detections, threshold=ACCEPT_CONFIDENCE, inference_ms=0):
@@ -32,7 +33,7 @@ class Observation:
 
 
 class YoloDetector:
-    def __init__(self, weights=DEFAULT_WEIGHTS, device='cpu', view_conf=0.25,
+    def __init__(self, weights=DEFAULT_WEIGHTS, device=setting('PCCC_AI_DEVICE','cpu'), view_conf=0.25,
                  threshold=ACCEPT_CONFIDENCE):
         if not all(math.isfinite(x) for x in (view_conf, threshold)) or not 0 <= view_conf <= threshold <= 1:
             raise ValueError('require 0 <= view confidence <= acceptance threshold <= 1')

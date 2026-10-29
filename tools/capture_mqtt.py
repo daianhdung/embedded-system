@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Capture MQTT observations to a new JSONL file; never marks acceptance PASS."""
+from runtime_config import MQTT_HOST, MQTT_PORT, TOPIC_PREFIX, setting
+
 import argparse
 from datetime import datetime, timezone
 import json
@@ -15,7 +17,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--duration',type=float,default=60)
-    p.add_argument('--host',default='broker.hivemq.com');p.add_argument('--port',type=int,default=1883)
+    p.add_argument('--host',default=MQTT_HOST);p.add_argument('--port',type=int,default=MQTT_PORT)
     p.add_argument('--prefix',default=DEFAULT_PREFIX)
     p.add_argument('--expected-firmware-id',default='UNSPECIFIED')
     p.add_argument('--ai-backend',choices=['MOCK','MODEL_UNVERIFIED','REAL_MODEL'],default='MOCK')

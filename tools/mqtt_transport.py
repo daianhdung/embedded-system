@@ -1,11 +1,13 @@
 """Small synchronous PC transport. Never runs on ESP32's local loop."""
+from runtime_config import MQTT_HOST, MQTT_PORT, TOPIC_PREFIX, setting
+
 import os
 import threading
 import uuid
 from mqtt_mock import DEFAULT_PREFIX
 
 class MqttTransport:
-    def __init__(self, host='broker.hivemq.com', port=1883, prefix=DEFAULT_PREFIX):
+    def __init__(self, host=MQTT_HOST, port=MQTT_PORT, prefix=DEFAULT_PREFIX):
         import paho.mqtt.client as mqtt
         if not prefix or len(prefix)>100 or any(c in prefix for c in ('#','+','\0')):
             raise ValueError('invalid concrete topic prefix')
@@ -17,6 +19,7 @@ class MqttTransport:
         self.client.reconnect_delay_set(1,30)
         if os.getenv('PCCC_MQTT_USERNAME'):
             self.client.username_pw_set(os.environ['PCCC_MQTT_USERNAME'], os.getenv('PCCC_MQTT_PASSWORD'))
+        if setting('PCCC_MQTT_TLS','0')=='1': self.client.tls_set()
         self.watch_topic=None
         self.client.on_connect=self._connect
         self.client.on_disconnect=self._disconnect
@@ -38,6 +41,11 @@ class MqttTransport:
         info=self.client.publish(self.prefix+'/ai/result',body,qos=1,retain=False)
         info.wait_for_publish(timeout=5)
         if not info.is_published(): raise RuntimeError('PUBACK timed out')
+    def publish_status(self,body):
+        # Best effort monitoring metadata; never a device command or AI result.
+        info=self.client.publish(self.prefix+'/ai/status',body,qos=0,retain=False)
+        return info.rc==0
+
     def close(self):
         self.client.disconnect(); self.client.loop_stop()
     def __exit__(self,*args): self.close()
