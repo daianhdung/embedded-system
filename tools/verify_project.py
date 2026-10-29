@@ -18,6 +18,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,help='New report directory, must not exist')
     p.add_argument('--broker-smoke',action='store_true',help='Requires optional amqtt test requirements')
+    p.add_argument('--dashboard',action='store_true',help='Streamlit UI check; with broker-smoke also test MQTT->SQLite')
     a=p.parse_args()
     folder=(a.out or ROOT/'runs'/('checks-'+datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ'))).resolve()
     folder.mkdir(parents=True,exist_ok=False)
@@ -26,9 +27,12 @@ def main():
           ('python-tools',[sys.executable,'-m','unittest','discover','-s','test','-p','test_*.py']),
           ('s8-host-synthetic',[sys.executable,'tools/run_s8_host.py','--out',str(folder/'s8-host-synthetic.csv')])]
     if a.broker_smoke: jobs.append(('pc-localhost-broker-smoke',[sys.executable,'test/broker_smoke.py']))
+    if getattr(a,'dashboard',False):
+        jobs.append(('dashboard-ui',[sys.executable,'test/dashboard_ui_check.py']))
+        if a.broker_smoke:jobs.append(('dashboard-localhost-broker',[sys.executable,'test/dashboard_smoke.py']))
     before=sha(LEDGER) if LEDGER.exists() else None
     report=dict(domain='SOFTWARE_CHECKS_NOT_ACCEPTANCE',started_utc=datetime.now(timezone.utc).isoformat(),
-                formal_ledger=str(LEDGER),formal_ledger_before_sha256=before,stages=[],model='DEFERRED_MOCK_ONLY',
+                formal_ledger=str(LEDGER),formal_ledger_before_sha256=before,stages=[],model='PRETRAINED_UNVERIFIED; these stages do not evaluate model metrics',
                 runtime_wokwi='NOT_RUN',real_image_metrics='NOT_RUN')
     failed=False
     try:
@@ -54,7 +58,7 @@ def main():
         report['completed_utc']=datetime.now(timezone.utc).isoformat()
         if len(report['stages'])!=len(jobs): failed=True
         report['software_status']='FAIL' if failed else 'PASS'
-        tracked=[ROOT/'platformio.ini']+[file for file in (ROOT/'include').glob('*.h') if file.name!='secrets.h']+list((ROOT/'scripts').glob('*.py'))+list((ROOT/'src').glob('*.cpp'))+list((ROOT/'tools').glob('*.py'))+list((ROOT/'test').glob('*.py'))+list((ROOT/'test/host').glob('*.cpp'))
+        tracked=list((ROOT/'dashboard').glob('*.py'))+[ROOT/'platformio.ini']+[file for file in (ROOT/'include').glob('*.h') if file.name!='secrets.h']+list((ROOT/'scripts').glob('*.py'))+list((ROOT/'src').glob('*.cpp'))+list((ROOT/'tools').glob('*.py'))+list((ROOT/'test').glob('*.py'))+list((ROOT/'test/host').glob('*.cpp'))
         report['source_sha256']={str(file.relative_to(ROOT)):sha(file) for file in sorted(tracked)}
         (folder/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print('Report: '+str(folder/'report.json'))

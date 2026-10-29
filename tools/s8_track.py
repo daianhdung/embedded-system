@@ -12,6 +12,8 @@ import uuid
 
 ROOT=Path(__file__).resolve().parents[1]
 LEDGER=ROOT.parent/'tests/integration-results.csv'
+if not LEDGER.exists():
+    LEDGER=ROOT/'acceptance/integration-results.csv'  # portable submission bundle
 FIELDS=['scenario_id','run','status','expected','observed','firmware_version','model_version','evidence_path','notes']
 MODEL_CASES={'TC01','TC06','TC08','TC10','TC11'}
 
