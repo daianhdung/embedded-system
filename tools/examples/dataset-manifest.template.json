@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "dataset_id": "REPLACE_WITH_DATASET_VERSION",
+  "source": "REPLACE_WITH_SOURCE_AND_PROVENANCE",
+  "license": "REPLACE_WITH_ACTUAL_LICENSE",
+  "independent_from_pretrained_training": false,
+  "samples": []
+}
