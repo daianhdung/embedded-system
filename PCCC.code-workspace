@@ -55,6 +55,45 @@
           "cwd": "${workspaceFolder}"
         },
         "problemMatcher": []
+      },
+      {
+        "label": "PCCC: Dashboard",
+        "type": "process",
+        "command": "${workspaceFolder}/.venv/bin/python",
+        "args": [
+          "-m",
+          "streamlit",
+          "run",
+          "dashboard/app.py",
+          "--server.address",
+          "127.0.0.1",
+          "--server.headless",
+          "true",
+          "--browser.gatherUsageStats",
+          "false"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "PCCC: MQTT local",
+        "type": "process",
+        "command": "${workspaceFolder}/.venv/bin/python",
+        "args": [
+          "tools/local_broker.py"
+        ],
+        "problemMatcher": []
+      },
+      {
+        "label": "PCCC: AI local (Wokwi)",
+        "type": "process",
+        "command": "${workspaceFolder}/.venv-ai/bin/python",
+        "args": [
+          "tools/start_ai.py"
+        ],
+        "problemMatcher": []
       }
     ]
   }
