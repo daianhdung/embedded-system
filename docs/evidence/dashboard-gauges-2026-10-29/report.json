@@ -1,0 +1,19 @@
+{
+  "scope": "SEMICIRCULAR_SENSOR_CARD_GAUGES",
+  "ui": "PASS all four sensors and historical/raw investigation",
+  "unit": "2 PASS: missing not zero, displayed values not clipped",
+  "browser": {
+    "desktop": 1440,
+    "mobile": 390,
+    "card_height_px": 160,
+    "images_loaded": true,
+    "no_text_overflow": true,
+    "no_mobile_page_overflow": true,
+    "temperature_gauge_selects_temperature_chart": true
+  },
+  "no_firmware_or_database_changes": true,
+  "sources": {
+    "dashboard/app.py": "2e680b0e6441e6f1caa7b5f5fd2ea08359a57425badb4aa6f08c2c1fe9bc20d1",
+    "dashboard/gauges.py": "e9fc440e220e502912a4a822c1d10d3964bab405ccdd52bdd14621257ab8301a"
+  }
+}

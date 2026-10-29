@@ -1,0 +1,8 @@
+{
+  "local_broker_started": true,
+  "dashboard_auto_subscribed": true,
+  "model_blank_image_inference": "NO_DETECTION",
+  "camera_opened": false,
+  "wokwi_runtime": "NOT_RUN",
+  "gpio_logic_unchanged": true
+}

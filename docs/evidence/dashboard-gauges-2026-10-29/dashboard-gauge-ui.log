@@ -1,0 +1,4 @@
+2026-10-29 10:40:10.883 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-29 10:40:11.852 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+PASS dashboard UI renders offline/history, sensors/charts/AI/events/acceptance; no control buttons or network connection.
+PASS KPI = chart endpoint = original record; all 4 chart schemas, metric navigation, time filtering, exact-ID details.

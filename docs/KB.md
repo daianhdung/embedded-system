@@ -6,6 +6,8 @@ Cập nhật 28/10/2026, theo trao đổi trực tiếp với người dùng. Đ
 
 [Mở bản đồ thư mục và điểm bắt đầu](project-map.md) · [Hướng dẫn hiện tại](s7-s8-guide.md)
 
+[Dashboard local](dashboard.md) · [Bản chuẩn bị nghiệm thu](acceptance-ready.md) · [Dữ liệu và đánh giá AI](ai-evaluation.md)
+
 ## Tiến độ S0–S9 — bắt đầu tại đây
 
 **Đã triển khai phần mềm tới S8 theo chế độ mock; cập nhật mới nhất có model YOLOv8n và observer chạy local, chưa nghiệm thu model→MQTT→ESP.** S5 vẫnHOÃN. S6 có mạng/contract/fusion; S7 có adapter/replay/plugin để thay model sau; S8 có regression, capture và công cụ quản lý bảng nghiệm thu. Build/host/unit/PC-broker smokePASS. **Chưa hoàn tất nghiệm thu S8:** còn lượtWokwi/ảnh, model/metrics thật và các phép đo mạng/latency trênMCU. Không lấy kết quảmock làm kết quảmodel.
@@ -18,7 +20,7 @@ Cập nhật 28/10/2026, theo trao đổi trực tiếp với người dùng. Đ
 | S3 | LDR demo lửa | Đã code; người dùng đã thấy sáng tăng→ADC<500→còi | [I01–I07](#s2-s4) |
 | S4 | Servo cửa + hai relay | Đã code; đã thấy LED tải sáng và xác nhận đóng cửa; toàn bộ state chờ S5 | [I01–I07](#s2-s4) |
 | S5 | Kiểm chứng local trong Wokwi | **HOÃN theo người dùng**, chưa đóng L01–L10 | [L01–L10](#s5) |
-| S6 | MQTT, contract, TTL, mock | Có code/test; log người dùng chứng minh chiều ESP→PC; nhậnAI/reconnect/latency còn chờ | [N01–N08](#s6) |
+| S6 | MQTT, contract, TTL, mock | Có code/test và trace replay PC→ESP nhận4gói/chuyểnFSM sau clockmapper; model đã PUBACK. Reconnect/flood/latency đầy đủ còn chờ | [N01–N08](#s6) |
 | S7 | Adapter/publisher AI + model | **Khung R7 đã có; YOLOv8n pretrained đã nạp/thử ảnh và webcam; có observer/plugin. Đánh giá, lọc thời gian và tích hợp model→MQTT→ESP chưa hoàn tất.** | [M01–M10](#s7) |
 | **S8** | **Công cụ kiểm thử và nghiệm thu** | **Tooling đã có; host240PASS/20DEFERRED; bảng260lượt thực vẫnNOT_RUN** | **[E01–E08 và13TC](#s8)** |
 | S9 | Đồng bộ báo cáo và đóng gói | Chưa sửa DOCX | [R01–R09](#s9) |
@@ -332,7 +334,7 @@ Mỗi TC dưới đây cần20lượt thật, expected/observed, firmware/model 
 
 ### P2 Checklist mở rộng nếu chọn làm
 
-- [ ] X01: Xác nhận dashboard/mobile là phạm vi tùy chọn hay cam kết riêng; nếu làm thì ưu tiên giám sát, không để UI/network quyết định thay luật local.
+- [x] X01: Người dùng đã chọn triển khai dashboard; có Streamlit/MQTT/SQLite chỉ đọc, biểu đồ/history/AI/stale và test phần mềm. Nghiệm thu Wokwi dashboard theo guide; không có remotecontrol. Mobile riêng chưa thuộc phạm vi đã làm.
 - [ ] X02: Nếu lên phần cứng thật, lập thiết kế riêng nguồn/chuyển mức/tải/cách ly/servo/warmup/hiệu chuẩn. Không đánh hoàn thành hardware từ kết quả simulator.
 
 ## Những gì đã có bằng chứng và giới hạn của bằng chứng
@@ -504,3 +506,57 @@ Raw confidence checks: [report](evidence/raw-confidence-checks-2026-10-28/report
 ### Người dùng hoàn tất lượt thử model qua camera — 28/10/2026
 
 Người dùng xác nhận đã test xong và yêu cầu chia commit. [Trích kết quả publisher](evidence/real-model-user-publish-2026-10-28.json): đã thấy nhãn lua với confidence khoảng0,466–0,753 và PUBACK khi đưa ảnh lửa vào camera; dưới ngưỡng0,8 nên chưa kỳ vọng kích FIRE từ các bản tin này. Đây là bằng chứng model thật→publisher→broker; chưa có capture/bộ đếm ESP tương ứng để tự kết luận nhận đủ hoặc hoàn tất AI/S8. Replay trước đã có trace ESP nhận4gói/chuyểnFSM. Giữ nguyên giới hạn về modelaccuracy, rawmode, simulationclock và nghiệmthu260lượt. Không đưa weights, ảnh cá nhân hay runs/ vào Git.
+
+### Phần mềm chuẩn bị nghiệm thu, giữ báo cáo sau — 28/10/2026
+
+Người dùng yêu cầu implement phần còn lại trước, chỉ đưa vào báo cáo sau nghiệmthu; xácnhận chưa códatasetgánnhãn. Triểnkhai dashboard Streamlit1.66.1/Paho/SQLite local chỉđọc, subscribe device telemetry/event/availability + AI result/status. Có stale/offline15sPC, identity/boot/retained/import/fixturechecks, giữ lịch sử riêng, biểu đồPCreceive và bảngnghiệmthu chỉđọc. DB/log ởruns, không đổi firmware/GPIO/FSM.
+
+Publisher thêm ai/status metadata khôngretained vàLWT, tách model/backend/publisher/unknown/STOP/ERROR với controlpacket4trường. TemporalGate opt-in3frame/2sPC/maxgap5s chỉdùngplugin thường; không tựhạngưỡng, khôngphátpredictioncũ hoặcnormalgiả. Chưa đánhgiápolicy bằngdataset nên mặcđịnh tắt. Có côngcụ networkcases (negative/replay/retained/floodbounded), importcapture lịch sử, dataset audit chốnggroup/hashleak, image-level metrics giữunknown, trainingentrypoint cókiểmtra manifest/YAMLsplit, và packageZIP source/evidence/ledger portable khôngsecrets/runtime; Wordchưađụngtới.
+
+[Điểm bắtđầu nghiệmthu](acceptance-ready.md), [dashboard](dashboard.md), [dữliệu AI](ai-evaluation.md). Build/core/41Python/host240PASS20DEFERRED/localhostbroker/UI/MQTT→SQLite đãchạy; kếtquảđầyđủ trong reportđợt này. Các lượt260thực, S5/S6mấtmạng/timing vàmodelmetrics/train vẫn chưa đượcđánhhoànthành. Không tả hoànthành đồán chỉ vì code/tooling đãcó. BáocáoDOCX/S9 chỉnhsửasau khi có kếtquả người dùng xácnhận.
+
+Release checks: [full report](evidence/dashboard-release-checks-2026-10-28/report.json), [post-check UI adjustment](evidence/dashboard-release-checks-2026-10-28/post-ui-check.json). All seven software stages PASS; firmware source and formal ledger hashes unchanged. User still needs real dataset/metrics and remaining Wokwi acceptance; DOCX untouched.
+
+
+## Quyết định 29/10/2026 — triển khai local theo .env
+
+Người dùng chốt MQTT broker, AI model và dashboard trên Mac; broker ngoài cấu hình sau. `.env.example` vào Git, `.env` riêng bị ignore. Dashboard tự kết nối, bỏ sidebar host/port, có mục nâng cao chỉ đọc. Python CLI > exported env > .env > default local; ESP đọc cấu hình khi build, secrets.h cũ vẫn ưu tiên. AI local dùng YOLO gate hiện tại, replay phải chọn rõ, không đổi unknown thành bình thường. Remote AI qua MQTT contract có sẵn; HTTP adapter mới chưa triển khai.
+
+- [x] Cấu hình PC dùng chung, firmware generated header, broker loopback và launcher AI Wokwi.
+- [x] UI tự kết nối, vẫn tách broker online khỏi ESP telemetry mới.
+- [ ] Nghiệm thu Wokwi → broker local → dashboard/AI với build cấu hình mới. Không chuyển kết quả R7 cũ thành PASS mới.
+- [ ] Kiểm chứng broker ngoài/TLS và remote AI khi thực sự triển khai.
+
+Hướng dẫn hiện tại: [local-setup](local-setup.md). Không đổi GPIO, FSM, ngưỡng hay thời gian an toàn; chưa cập nhật Word.
+
+Kiểm chứng phần mềm cấu hình local: 7/7 stage PASS (43 Python tests, build ESP, core, synthetic, localhost broker, UI, dashboard broker). Model thật nạp/inference ảnh trống thành công; không mở camera. [Bằng chứng](evidence/local-config-2026-10-29/report.json). Wokwi runtime local và nghiệm thu chính thức vẫn chưa đánh PASS.
+
+## Dashboard: tái tổ chức UI/UX ngày 29/10/2026
+
+Yêu cầu: hiểu trạng thái nhanh, nối KPI với biểu đồ và truy nguyên timestamp/bản tin. Giữ Streamlit và collector, không thay firmware/GPIO/logic an toàn.
+
+- [x] Tổng quan tách ESP trực tiếp, broker, AI và dữ liệu lịch sử; thẻ có đơn vị/nguồn/ID.
+- [x] Nút thẻ mở đúng xu hướng; tooltip chính xác; đường ngưỡng đọc config.h, không suy lại FSM.
+- [x] Khoảng lịch sử dùng chung cho chart/table/EVENT, chọn điểm theo record ID và xem JSON nguồn; CSV theo bộ lọc.
+- [x] Bố cục responsive, kỹ thuật thu gọn, giữ tab AI/nghiệm thu và lệnh tải chỉ đọc.
+- [ ] Nghiệm thu trực tiếp các hành vi cảnh báo sau khi nhóm mở lại Wokwi; kiểm thử UI không tự ghi PASS đồ án.
+
+Giới hạn: không có timestamp đo riêng từng sensor trong MQTT; hiện lấy tối đa 2.000 snapshot/500 EVENT trong khoảng đã chọn, không tổng hợp. [Hướng dẫn dashboard](dashboard.md).
+
+Kiểm chứng UI redesign: 46 Python tests PASS, UI AppTest PASS (rỗng và fixture riêng, bốn KPI/chart/source, metric navigation, time filter, chọn ID), smoke broker PASS. Trình duyệt 1440×1000 và 390×844, chọn điểm → bản ghi#98; mobile không có overflow ngang. [Bằng chứng](evidence/dashboard-redesign-2026-10-29/report.json). Chưa đo thời gian thao tác với người dùng thật hay chạy lại nghiệm thu Wokwi.
+
+### Dashboard compact — refinement 29/10/2026
+
+- Thẻ native Streamlit 138px desktop, toàn bộ thẻ chọn được và có selected state; bỏ nút “Xem xu hướng”.
+- Metadata snapshot/live/history dùng header chung; nguồn/chi tiết trong expander.
+- Sáu lệnh thiết bị thành một hàng badge tự wrap, phân biệt lệnh ghi nhận với phản hồi vật lý.
+- Giữ focus_metric dùng chung card/selectbox/chart/table, giữ time range và KPI cuối; record selector tách theo sensor.
+- Chỉ sửa UI, test và tài liệu; không đổi database, sensor/FSM/threshold hay ESP32.
+
+Kiểm chứng compact UI: AppTest PASS cho bốn thẻ, đồng bộ hai chiều với bộ chọn, giữ time range, KPI không đổi theo lịch sử và record-ID; 9 test store/presentation PASS. Desktop đo 138px/thẻ và 36.3px cho dải badge (chưa tính chú thích). Kiểm tra 1440/1024/390px; mobile không tràn ngang. [Bằng chứng](evidence/dashboard-compact-2026-10-29/report.json).
+
+### Thẻ gauge theo ảnh tham chiếu
+
+Người dùng chọn dạng đồng hồ bán nguyệt cho properties. Đã áp dụng bốn gauge trong native button, cao160px desktop; giữ chọn sensor→chart→raw record. Thang gauge chỉ phục vụ hiển thị, không thay phép tính hay phân loại an toàn. Không thêm công tắc điều khiển bơm/van. UI AppTest và2test gauge (mất mẫu/ngoài thang không làm sai số đọc) PASS.
+
+Kiểm tra trước commit ngày29/10: cả7stage PASS (buildESP, hostcore, Pythontools, synthetic scenarios, broker smoke, UI, dashboard broker). [Báo cáo snapshot trước commit](evidence/pre-commit-checks-2026-10-29/report.json). Không tự ghi PASS nghiệm thu hoặc đánh giá model.

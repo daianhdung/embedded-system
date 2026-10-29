@@ -1,0 +1,38 @@
+{
+  "domain": "DASHBOARD_SOFTWARE_UI_NOT_FORMAL_ACCEPTANCE",
+  "date_local": "2026-10-29",
+  "python_tests": 46,
+  "python_status": "PASS",
+  "ui_status": "PASS",
+  "broker_smoke": "PASS",
+  "browser_checks": {
+    "desktop": "1440x1000",
+    "mobile": "390x844",
+    "mobile_horizontal_overflow": false,
+    "kpi_to_chart": "PASS temperature card selected correct metric and tab",
+    "chart_point_to_record": "PASS selected record 98",
+    "data": "existing SQLite observations; no fake data added to user DB",
+    "viewport_restored": true
+  },
+  "firmware_changes": false,
+  "limitations": [
+    "No per-sensor acquisition timestamp/validity in current MQTT schema",
+    "Thresholds reference current config.h, historical firmware may differ",
+    "History display bounded at 2000 snapshots and 500 events",
+    "No timed user study for the 5s/15s objective",
+    "Live Wokwi transitions not exercised during UI work"
+  ],
+  "sha256": {
+    "dashboard/app.py": "fb20361e211efd62a89c37b8cdf85db1f8d5ad58e5772d636ace0bd778078a62",
+    "dashboard/store.py": "3b046330254fee8a27ca47c95bd83dadaa90aa16aeb1cd647397ea8abb9a6121",
+    "dashboard/presentation.py": "c44059556e72f59933a49636d44153e3313b2678b37f9f311ee5c557d101852b",
+    "dashboard/charts.py": "f6e0c0cdd60ede3c49337bad032a620170efeb110c2fa09f67690e19b733c2df",
+    "test/dashboard_ui_check.py": "19ac351fb4801d5203e5b3aab69d91b66d92f8f4fe96140e1b653fa5444d038e",
+    "test/test_dashboard_presentation.py": "d87dd2977af71a85fe0ce134155a00a3688095270178b69a3fbfb9c54709ea45"
+  },
+  "browser_selected_record": {
+    "id": 98,
+    "smoke_adc": 3628,
+    "received_utc": "2026-10-29T02:34:17.148441+00:00"
+  }
+}

@@ -2,6 +2,8 @@
 
 **Đã có phần mềm tích hợp và công cụ kiểm thử tới S8 bằng mock. Model YOLOv8n đã chạy thử local ở chế độ quan sát, chưa nghiệm thu với ESP32.** S5 hoãn. S8 chưa hoàn tất nghiệm thu260lượt. [Tiến độ và checklist duy nhất](docs/KB.md#progress) · [Hướng dẫn hiện tại S7–S8](docs/s7-s8-guide.md) · [Contract MQTT S6](docs/reference/s6-mqtt-contract.md).
 
+**Cập nhật 29/10: mặc định MQTT + AI chạy local, dashboard tự kết nối. Làm theo [hướng dẫn local](docs/local-setup.md) trước các lệnh trong hướng dẫn cũ.**
+
 ## Bắt đầu tại đây
 
 1. TrongVSCode chọn **File → Open Workspace from File…** và mở [PCCC.code-workspace](PCCC.code-workspace).
@@ -27,6 +29,22 @@ Máy khác dùng `pio run` khi PlatformIO có trong PATH. Boot phải có `S7/S8
 ```
 
 Build/core/Python/scenarios được chạy và lưu report/log/hash trongruns/. Không chạy Wokwi hoặc model. Bộ host có240PASS/20DEFERRED là test logic bằng virtualmillis, không phải240lượt nghiệm thu Wokwi. [Báo cáo đã chạy](docs/evidence/s7s8-final-checks-2026-10-28/report.json).
+
+## Bản sẵn sàng nghiệm thu và dashboard
+
+Bắt đầu tại [hướng dẫn nghiệm thu](docs/acceptance-ready.md). [Dashboard local](docs/dashboard.md) hiển thị cảm biến/AI/lệnh tải, lịch sửSQLite và trạng thái stale; không điều khiển từ xa.
+
+```sh
+.venv/bin/python -m streamlit run dashboard/app.py --server.address 127.0.0.1 --server.headless true --browser.gatherUsageStats false
+```
+
+Máy hiện tại đã có dependency; máy mới cài `tools/requirements-dashboard.txt`. Mở http://127.0.0.1:8501 rồi nhấn Kết nối. Đóng dashboard không ảnh hưởng localESP. Model chưa có dataset độc lập; [audit/evaluate/train](docs/ai-evaluation.md) đã có công cụ, chưa tự sinh metrics. Word để sau nghiệm thu theo yêu cầu.
+
+Kiểm tra tổng hợp (cần requirements-test-mqtt.txt và requirements-dashboard.txt):
+
+```sh
+.venv/bin/python tools/verify_project.py --broker-smoke --dashboard
+```
 
 ## Quan sát AI thật trên máy tính
 

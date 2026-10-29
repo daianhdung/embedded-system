@@ -1,0 +1,1 @@
+PASS MQTT->dashboard SQLite, source status/STOP, 4 AI packets, fixture never shown live. No ESP/model/acceptance PASS.

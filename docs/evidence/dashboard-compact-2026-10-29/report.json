@@ -1,0 +1,42 @@
+{
+  "scope": "FOCUSED_UI_REFINEMENT",
+  "date_local": "2026-10-29",
+  "checks": {
+    "ui": "PASS empty and populated fixture; all four cards, reverse filter sync, time range preserved, raw sensor column and exact-ID selection, latest KPI invariant under historical filters",
+    "unit": "9 PASS",
+    "browser": "1440px, 1024px and 390px, no horizontal page overflow on mobile; viewport restored"
+  },
+  "geometry": {
+    "cards": [
+      {
+        "height": 138,
+        "width": 308
+      },
+      {
+        "height": 138,
+        "width": 308
+      },
+      {
+        "height": 138,
+        "width": 308
+      },
+      {
+        "height": 138,
+        "width": 308
+      }
+    ],
+    "commandHeight": 36.265625,
+    "scale": 1,
+    "viewport": 1440
+  },
+  "unchanged": [
+    "database implementation",
+    "chart data/threshold implementation",
+    "firmware and sensor calculations",
+    "AI/events/acceptance sections"
+  ],
+  "sources": {
+    "dashboard/app.py": "0ce75fedcdf6ff86a672b6c1230bd3abc328dc9207da7b85d5e5dfc67b467ded",
+    "test/dashboard_ui_check.py": "e744ac1c53c7f5752978db759ec73f304d1883546917e9a260eccd14f260a649"
+  }
+}

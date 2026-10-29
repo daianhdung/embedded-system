@@ -16,6 +16,7 @@ firmware/
 ├── PCCC.code-workspace       Cửa sổ VSCode gọn cho dự án
 ├── src/                     Chương trình C++ chạy trên ESP32
 ├── include/                 Khai báo, kiểu dữ liệu và cấu hình C++
+├── dashboard/               Giao diện Streamlit + subscriber + SQLite
 ├── tools/                   Chương trình Python chạy trên máy Mac/PC
 ├── test/                    Test phần mềm và dữ liệu kiểm tra
 ├── scripts/                 Hỗ trợ build, tạo mã phiên bản firmware
@@ -38,6 +39,9 @@ firmware/
 
 | Bạn muốn làm gì? | Bắt đầu tại đâu? |
 |---|---|
+| Mở giao diện giám sát | [Dashboard](dashboard.md), `dashboard/app.py` |
+| Chuẩn bị nghiệm thu bản cuối | [Acceptance](acceptance-ready.md) |
+| Audit/evaluate/train dữ liệu AI | [AI evaluation](ai-evaluation.md) |
 | Xem đang ở bước S nào | [KB](KB.md#progress) |
 | Chạy và kiểm tra bản hiện tại | [Hướng dẫn S7–S8](s7-s8-guide.md) |
 | Hiểu chương trình bắt đầu và lặp thế nào | `src/main.cpp` |
@@ -68,13 +72,12 @@ Cặp `include/*.h` và `src/*.cpp` thường cùng một module: `.h` khai báo
 
 Chưa chuyểnGit hoặc các file Word/bảng nghiệm thu. Khi đóng gói S9 cần gom các tài liệu ngoài repo có chủ đích; không tạo bản nghiệm thu PASS song song.
 
-## 5. Bước tiếp theo: một lượt tích hợp mock có log
+## 5. Bước tiếp theo: nghiệm thu bản tích hợp
 
-1. Mở workspace, đọc README và phần tiến độ trong KB.
-2. Chạy **PCCC: Kiểm tra phần mềm**. Report phần mềm phải PASS; đây chưa phải nghiệm thu Wokwi.
-3. Stop/Start Wokwi bản R7, chờ `WiFi/MQTT/Sub/UTC: 1/1/1/1`. Đưa cảm biến local về nền.
-4. Làm một lượt **capture + replay** theo [hướng dẫn hiện tại](s7-s8-guide.md#3-thu-log-và-gửi-replay), quan sát còi/tải/cửa và giữ log.
-
-Model thật vẫn để sau; không cần nhảy sang S9 hoặc tự train ngay. Mục tiêu gần nhất là xác nhận đường PC→MQTT→ESP32→đầu ra hoạt động và có minh chứng đọc được.
+1. Mở [dashboard](dashboard.md), nhấn Kết nối và phân biệt live/stale.
+2. Dùng [hướng dẫn nghiệm thu](acceptance-ready.md), chạy capture và nguồn AI đồng thời. Replay đã có trace nhận4gói/chuyểnFSM, không cần lặp lại chỉ để hiểu thư mục.
+3. Ghi các ca local/mạng/AI còn thiếu vào ledger gốc bằng minh chứng thực.
+4. Nhóm chưa có dataset: dùng [công cụ chuẩn bị/đánh giá](ai-evaluation.md) khi có dữ liệu. Không tự điền metrics hoặc train bằng ảnh chưa xác minh nhãn/nguồn.
+5. Sau nghiệm thu mới đồng bộ Word và dùng `tools/package_submission.py` để đóng gói.
 
 Nguồn cấu hình workspace: [VSCode workspaces](https://code.visualstudio.com/docs/editing/workspaces/workspaces), [workspace settings](https://code.visualstudio.com/docs/configure/settings).

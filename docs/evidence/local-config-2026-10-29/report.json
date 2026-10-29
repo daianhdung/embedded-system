@@ -1,0 +1,170 @@
+{
+  "domain": "SOFTWARE_CHECKS_NOT_ACCEPTANCE",
+  "started_utc": "2026-10-29T02:29:59.082220+00:00",
+  "formal_ledger": "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/tests/integration-results.csv",
+  "formal_ledger_before_sha256": "05830e572db76f7b963060c48cf1bb3f43060e411e8775e45be0a9bd3bbca784",
+  "stages": [
+    {
+      "name": "esp32-build",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/.platformio/penv/bin/pio",
+        "run"
+      ],
+      "seconds": 2.219,
+      "log": "esp32-build.log",
+      "sha256": "c726dde8eb2bfc73326019b256d7e195a6243bacf61cfef29d0eeeada98f494f"
+    },
+    {
+      "name": "host-core",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/.venv/bin/python",
+        "test/run_host_tests.py"
+      ],
+      "seconds": 3.477,
+      "log": "host-core.log",
+      "sha256": "40e14c8d6f94f330601b12097c563af22ee63019ed3084d4aea8e2bb473a8adf"
+    },
+    {
+      "name": "python-tools",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "test",
+        "-p",
+        "test_*.py"
+      ],
+      "seconds": 0.687,
+      "log": "python-tools.log",
+      "sha256": "0225291d6e2995f8f9c8ca7c42edc3df20b5e52bc6c6f1806629ed35e8ceb50b"
+    },
+    {
+      "name": "s8-host-synthetic",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/.venv/bin/python",
+        "tools/run_s8_host.py",
+        "--out",
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/runs/local-config-checks-2026-10-29-v3/s8-host-synthetic.csv"
+      ],
+      "seconds": 1.379,
+      "log": "s8-host-synthetic.log",
+      "sha256": "49e0f06d7bba236dad41954b0faedb1c8f687c701688172096411e04e8b8c7c6"
+    },
+    {
+      "name": "pc-localhost-broker-smoke",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/.venv/bin/python",
+        "test/broker_smoke.py"
+      ],
+      "seconds": 5.639,
+      "log": "pc-localhost-broker-smoke.log",
+      "sha256": "3633790122fcdc23d559a2e1fe95adf75ecb045fad0954e3ce6063f53d8f4b1e"
+    },
+    {
+      "name": "dashboard-ui",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/.venv/bin/python",
+        "test/dashboard_ui_check.py"
+      ],
+      "seconds": 0.913,
+      "log": "dashboard-ui.log",
+      "sha256": "8445052fc1b87473dbbc721011b6cff3e687926cc8145fc10caf03bdc4cfb369"
+    },
+    {
+      "name": "dashboard-localhost-broker",
+      "status": "PASS",
+      "command": [
+        "/Users/daianhdung/Documents/PTIT/HKVII_He-thong-nhung/Nhom07-INT1461-PhongChayChuaChay/firmware/.venv/bin/python",
+        "test/dashboard_smoke.py"
+      ],
+      "seconds": 0.902,
+      "log": "dashboard-localhost-broker.log",
+      "sha256": "d3b07d02a05676248917545f9aa39bcbc0bcc5053dd5e9446ddb9c08e98182c0"
+    }
+  ],
+  "model": "PRETRAINED_UNVERIFIED; these stages do not evaluate model metrics",
+  "runtime_wokwi": "NOT_RUN",
+  "real_image_metrics": "NOT_RUN",
+  "formal_ledger_unchanged": true,
+  "firmware_bin_sha256": "8469cdf7842fcbbc8bc2fff8b9782d08169ce2c3ec09a41ec381fc1d2889d523",
+  "firmware_identity_header": "#pragma once\n#define PCCC_FIRMWARE_ID \"R7-24321834968621b6\"\n",
+  "completed_utc": "2026-10-29T02:30:14.300743+00:00",
+  "software_status": "PASS",
+  "source_sha256": {
+    "dashboard/__init__.py": "fb9a8d1b724300b098a0fed12a73f3811c5453713122d39389a3699fac60cd36",
+    "dashboard/app.py": "3e4a56c3a040a3e613ea90168ae5f65dc97b61ec823a1a26d14cc00e5b031a23",
+    "dashboard/collector.py": "9bff80836fd3771da3e9259e016faabd158c4289f75008169fd9e32436867c68",
+    "dashboard/store.py": "16f8fb066b3d82b33cdd703aa9ee139e535b3d985d7453bb5a90f2457e0f2d7e",
+    "include/ai_contract.h": "2b41843d878babcffb2730fbeeaf4c618e302e1f7a888756eaf5970cba13a90b",
+    "include/config.h": "b6a1a685cf0aa363804845511d725cf65194be21d0967e1c7074b4c0d5f01e9c",
+    "include/display.h": "255f0f6ea8287c7c96792f88f8aebeb0895d60f33f1238955ec1b08507686501",
+    "include/firmware_identity.h": "07b28791ce8ab828c4e69ab9f0c63185814604b12270f5f633107bfe30ff1b8b",
+    "include/ldr_detector.h": "e292250b3e5120726e71aab9bbda0b8cb2f46e6f55806d0ecb1c0a350e31740a",
+    "include/mqtt_payload.h": "ea13896be3115093c728ded44492e548eb0838d13e7b5a1cc50784d91259199b",
+    "include/network.h": "c2ca5456c785363b713002328a06c95f114c13d9e053a77776ae787c1718fd6b",
+    "include/network_config.h": "7d2a4b6d6fcb651db2159162c0f6697e59a0197b9d7103af750da65c2e3f9701",
+    "include/outputs.h": "a1290d1edcc4a6ac0057df92fe962ea10ae1d0c18c935052ac099439e0118020",
+    "include/safety.h": "8507f7590912149154415fa8f3c3b909908080b72e4d8030c89694510ba23325",
+    "include/sample_timing.h": "308f707688bb25101941d8b7e235beecc23846bddd3d6bd78ac407720b2d315b",
+    "include/secrets.example.h": "8efd529dfd3bc241d46960a5055846daffe8a6e706b2d384f099a0fbc676316e",
+    "include/sensors.h": "8e5543896a8cbcff1c6305b2482caa336efb49b19ec85636412a0e7f74dd8693",
+    "include/servo_signal.h": "e51d255d37f27b7116deb7347abc2f527391b1b9be8fb502b70953a09f67f41e",
+    "include/telemetry.h": "64f8f318c7ef40727b6b09a01cbafe74724c64d4e931433fa6381111f644f8ec",
+    "platformio.ini": "c5e7a5c075d68a06280263c9e3cf449e9684e9712d180ff04aa900c41c18224d",
+    "scripts/build_identity.py": "43f286dd1da4e45b4aeafcd97086108b6d0336f7b1e1fc10f125db16266f5d29",
+    "src/ai_contract.cpp": "952313c8169b4b916b7473c31737594d3ac2b9718cc53676809ee4cca6ecfd54",
+    "src/display.cpp": "3bb338c6b046d9e932140161a7750cae7e4749761c609dec180b3bc5d1d413a2",
+    "src/main.cpp": "1d314538e95dfb521b795d6aca8106c93790c5d3dd3375265acf42f8454112c3",
+    "src/mqtt_payload.cpp": "87125f702d846459229d624b0758dfb6e6b5330842bbf4b151f587ae6a4705eb",
+    "src/network.cpp": "d080f0a7fd497df596920a0c78e066f606071880b979b3c2f5245f06c5498406",
+    "src/outputs.cpp": "fa597589cc299e043da19991c6bf65095805096ddce51443a1d7e1231e84e364",
+    "src/safety.cpp": "1c3ca7ca6a84d71aa4eb6f1a2d7e0b1b13e2ee9960c5d099a0f635aaf5ebfc5b",
+    "src/sensors.cpp": "eab0d7d8caba2b080878ef1e48e38d7ca9d17dedc15686d192adc3766af63f1b",
+    "src/telemetry.cpp": "8eecfe9189612d382f8a49c52a9b4f753df07d6e96f58d1cfd4b42004e5f8ba2",
+    "test/broker_smoke.py": "1c1fa31313f273433ec7a1a80544eae7b84b13168f63f25d4ded184fcf5c46a7",
+    "test/dashboard_smoke.py": "25f9a59629e7139cb66f8eba0c77784e076838899f1f69bd099d4d27cfa4d0db",
+    "test/dashboard_ui_check.py": "8521a4984b5eb50284a3da86c4083b99114da3935012310a745cf5dcec12e9b3",
+    "test/host/test_ai.cpp": "bbb9ac188470707d09cf00c9669630eef2e35c40a5c0f2845270f9d5142513cf",
+    "test/host/test_s8_scenarios.cpp": "c1c3d562d2e1e76f023aee66cc61711294acbb81215530a135eb880d4eba38ca",
+    "test/host/test_safety.cpp": "d9f56643a5b3b34fb7d1bbe26439c3476cb4324865f52969b61ed537ee3e159b",
+    "test/run_host_tests.py": "2c8abd5bb63066be46ad9d8ac364414d85efcb2659ebeb186a4143873361eef7",
+    "test/test_ai_dataset.py": "b53291a791874e1611c2ca212d4deefe88098a3dd1d55da64609736cad69e1c1",
+    "test/test_ai_observe.py": "0c557488090aa92b4a243ba8d34246c1ef1d0c576382ed66a06cccfe9cbbdd55",
+    "test/test_dashboard.py": "cf554a89c35937deba90d1646e18985de710133d89c336ad66da6dddfe9326f6",
+    "test/test_mqtt_mock.py": "4d8978301d6a7f042dc1432ebb9b4937fad8ed59d7f06e373c3cfcaa718dad67",
+    "test/test_package.py": "fcbdc8091f340f9467753efc65b7ef6d457f73698784c5198bc348af977cf678",
+    "test/test_runtime_config.py": "dc21f69dcb0ad124b98e3ad89eb004c7047ae944e49965a5ca6023727fd013e9",
+    "test/test_s7_s8_tools.py": "493ccf354e1f4e90228270b3de8174f2272030884345def919cadf51691b093f",
+    "test/test_temporal_filter.py": "3249836ae4a1eb4d5cd41c2397125485bafbcc15f2464bf14bb74dca7802841f",
+    "test/test_wokwi_clock.py": "834ac7cbc8458d05dd2afe43567f1c97003a49b94f299ceab4bb059735d55b5e",
+    "test/verify_wiring.py": "5fa9ecf801713b3929ec12edcd5fc31ffcedb62266082ed7f770511ebf062d9b",
+    "tools/ai_adapter.py": "bbe7c8214c36e6836ba61c4fca2f0e6170b2a79eef9408b68bc5103f2f749a28",
+    "tools/ai_observe.py": "365b2e7a772b02ac83337c7fd839ee2c2849866df5c75181387f83af05d7e2c6",
+    "tools/ai_publish.py": "55c088d4dd96d5db3e557f3e8208ad2a88d55240de189ded18cb1573f53a259c",
+    "tools/capture_mqtt.py": "e5490bfe1cc069d219fab461c88428559e2fecc85547dd76e7a703c5c87a5412",
+    "tools/dashboard_import.py": "2482923292b56444333cf82c8393c5cc5b582c544762adb0d8a6ccb212d7cd0a",
+    "tools/evaluate_ai.py": "7c228ad349682b98ecd32b52de978015d46d95a0750962055933a08b0bfc62ea",
+    "tools/local_broker.py": "1f8a359951122c834ce067fac3514f0692fb44ee94fac5127dbadac88b58b102",
+    "tools/mqtt_mock.py": "8e31512827c8af48f22e49548ab3fd8304c9dad3804186b98a8874c47ab77cb7",
+    "tools/mqtt_transport.py": "4948c6a5802b0313ee0fa705c72e4858b01a3c0e97de5a12aaa473df009bb97f",
+    "tools/network_cases.py": "ea52aa9408735513e76f50eec582153257c306f8b4b2755f1ba3b7ca49cdd7d0",
+    "tools/package_submission.py": "1f74a33280e4a79021583007467087082a5a624c4dcfbb2f1f8c98488919c0a3",
+    "tools/run_s8_host.py": "553fa78c68f5dbd52e35a8fb44638e9ac503a12dc601ceffcae113c2af348713",
+    "tools/runtime_config.py": "d93510707a5fe927743932d90bc7f3530155c71e39f41f6b75bfe4c787a41383",
+    "tools/s8_track.py": "0db48a84923ed570f8d98f9b8d0bea0f2e618fa842b6a44ceaf53860139acbdb",
+    "tools/start_ai.py": "ccbf57cf02842c51b7b3bfdccd463a2fea15aad0cfd65c8c68c4b4cb510b49bb",
+    "tools/temporal_filter.py": "ff55299af85cafe037edb02f4aa4ce5e9a41aa50bad7eba73ad296511437a812",
+    "tools/train_ai.py": "210bf9067698760977423c2848e993e8c24fe0291fed0e8afce5a46164f68c8f",
+    "tools/verify_project.py": "6f5b798820d046ee53f5e50f932e3ab03a4fabac25fff1bc5b91257c80477572",
+    "tools/wokwi_clock.py": "06ae789b68de895d556d7605dfe41ebbfacf86a215e58cc95030cbb8198a35fb",
+    "tools/yolo_plugin.py": "397d7d97a89c7da156a52c4a990f928388c229ccd693a312b4ce8c4e2eb0c578"
+  }
+}

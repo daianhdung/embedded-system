@@ -1,0 +1,8 @@
+{
+  "domain": "POST_CHECK_UI_ADJUSTMENT",
+  "change": "Replace deprecated width argument; configurable local DB and isolated empty-state UI check",
+  "validation": "PASS test/dashboard_ui_check.py after UI adjustment",
+  "dashboard_app_sha256": "64116221208aedc782af1d5b003a5b4b9815855a22158b44628fb34ac9516898",
+  "validation_log_sha256": "820b8254df2827e809a239f95b0911ce0f3491eec85badbafd2175690d3c9f1e",
+  "ui_check_script_sha256": "4904fa12f1d7a206736fd6c29228eb3a3038e0354bd2fb56a11f821c69f6cbf6"
+}
